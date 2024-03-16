@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 import prompt from 'prompt-sync';
-import { Parser } from './lox-ts';
+import { Scanner } from './lox-ts';
 
 function main(args: string[]) {
   if (args.length > 1) {
@@ -30,15 +30,15 @@ function runFile(filename: string) {
 }
 
 function run(input: string) {
-  const parser = new Parser(input);
-  const tokens = parser.parse();
+  const scanner = new Scanner(input);
+  const tokens = scanner.scan();
 
   for (let token of tokens) {
     console.log(token.toString());
   }
 
-  if (parser.errors.length > 0) {
-    for (let error of parser.errors) {
+  if (scanner.errors.length > 0) {
+    for (let error of scanner.errors) {
       console.log(`${error.description} [${error.line}]`);
     }
   }

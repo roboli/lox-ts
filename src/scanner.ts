@@ -3,14 +3,14 @@ import {
   TokenType,
 } from './lox-ts';
 
-type ParseError = {
+type ScanError = {
   description: string,
   line: number,
 }
 
-export class Parser {
+export class Scanner {
   input: string;
-  errors: ParseError[] = [];
+  errors: ScanError[] = [];
   tokens: Token[] = [];
   line = 0;
   pos = 0;
@@ -30,7 +30,7 @@ export class Parser {
     this.input = input;
   }
 
-  parse(): Token[] {
+  scan(): Token[] {
     while (!this.isOutOfRange()) {
       const current = this.peek();
 
