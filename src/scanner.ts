@@ -18,10 +18,15 @@ export class Scanner {
   keywords = {
     'and': TokenType.and,
     'else': TokenType.else,
+    'false': TokenType.false,
     'for': TokenType.for,
     'fun': TokenType.fun,
     'if': TokenType.if,
+    'nil': TokenType.nil,
     'or': TokenType.or,
+    'print': TokenType.print,
+    'return': TokenType.return,
+    'true': TokenType.true,
     'var': TokenType.var,
     'while': TokenType.while
   };
