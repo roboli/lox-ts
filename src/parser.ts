@@ -266,7 +266,7 @@ export class Parser {
   number() {
     let value = '';
     let hasDot = false;
-    while (!this.isOutOfRange()) {
+    while (!this.isOutOfRange() && (this.isNumber() || this.peek() == '.')) {
       if (this.isNumber()) {
         value += this.peekAndAdvance();
       } else if (this.peek() == '.' && !hasDot) {

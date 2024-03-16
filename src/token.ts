@@ -51,6 +51,6 @@ export class Token {
   }
 
   toString() {
-    return `${this.lexeme} ${this.value} ${this.line}`;
+    return `${this.type} ${this.lexeme} ${this.value}`;
   }
 }

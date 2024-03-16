@@ -25,7 +25,8 @@ function runRepl() {
 }
 
 function runFile(filename: string) {
-
+  const input = fs.readFileSync(filename, 'utf8');
+  run(input);
 }
 
 function run(input: string) {
