@@ -1,6 +1,7 @@
 import * as fs from 'fs';
 import prompt from 'prompt-sync';
-import { Scanner } from './lox-ts';
+import { Parser, Scanner } from './lox-ts';
+import { AstPrinter } from './ast-visitor';
 
 function main(args: string[]) {
   if (args.length > 1) {
@@ -33,15 +34,27 @@ function run(input: string) {
   const scanner = new Scanner(input);
   const tokens = scanner.scan();
 
-  for (let token of tokens) {
-    console.log(token.toString());
-  }
-
   if (scanner.errors.length > 0) {
     for (let error of scanner.errors) {
       console.log(`${error.description} [${error.line}]`);
     }
+
+    return;
   }
+
+  const parser = new Parser(tokens);
+  const expr = parser.parse();
+
+  if (parser.errors.length > 0) {
+    for (let error of parser.errors) {
+      console.log(error);
+    }
+
+    return;
+  }
+
+  const printer = new AstPrinter();
+  console.log(printer.print(expr!));
 }
 
 main(process.argv.slice(2));

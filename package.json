@@ -4,7 +4,8 @@
   "description": "Lox programming language wrote in TypeScript",
   "main": "index.js",
   "scripts": {
-    "start": "ts-node src/index.ts"
+    "start": "ts-node src/index.ts",
+    "generate": "ts-node src/generate-ast.ts"
   },
   "keywords": [],
   "author": "",

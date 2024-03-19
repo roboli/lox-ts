@@ -90,7 +90,7 @@ export class Scanner {
           this.advance();
           this.tokens.push(new Token({
             type: TokenType.semicolon,
-            lexeme: '+',
+            lexeme: ';',
             line: this.line
           }));
           break;
@@ -116,7 +116,7 @@ export class Scanner {
         case '-':
           this.advance();
           this.tokens.push(new Token({
-            type: TokenType.plus,
+            type: TokenType.minus,
             lexeme: '-',
             line: this.line
           }));
@@ -235,6 +235,11 @@ export class Scanner {
       }
     }
 
+    this.tokens.push(new Token({
+      type: TokenType.eof,
+      lexeme: 'EOF',
+      line: this.line
+    }));
     return this.tokens;
   }
 

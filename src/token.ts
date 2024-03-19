@@ -8,6 +8,7 @@ export enum TokenType {
   else,
   equal,
   equalEqual,
+  eof,
   false,
   for,
   fun,
@@ -56,6 +57,6 @@ export class Token {
   }
 
   toString() {
-    return `${this.type} ${this.lexeme} ${this.value}`;
+    return `${TokenType[this.type]} ${this.lexeme} ${this.value}`;
   }
 }
