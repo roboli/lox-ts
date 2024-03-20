@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 import prompt from 'prompt-sync';
-import { Parser, Scanner } from './lox-ts';
+import { Interpreter, Parser, Scanner } from './lox-ts';
 import { AstPrinter } from './ast-visitor';
 
 function main(args: string[]) {
@@ -53,8 +53,9 @@ function run(input: string) {
     return;
   }
 
-  const printer = new AstPrinter();
-  console.log(printer.print(expr!));
+  const interpreter = new Interpreter();
+  const result = interpreter.interpret(expr!);
+  console.log(result);
 }
 
 main(process.argv.slice(2));
