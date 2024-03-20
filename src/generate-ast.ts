@@ -13,16 +13,20 @@ function main(args: string[]) {
     'Grouping = expression: Expr',
     'Literal = value: any ',
     'Unary = operator: Token, right: Expr'
-  ]);
+  ], ['Token']);
+  defineAst(outputDir, 'Stmt', [
+    'Expression = expression: Expr',
+    'Print = expression: Expr'
+  ], ['Expr']);
 }
 
-function defineAst(outputDir: string, baseName: string, types: string[]) {
+function defineAst(outputDir: string, baseName: string, types: string[], imports: string[]) {
   let path = `${outputDir}/${baseName.toLowerCase()}.ts`;
   const builder = new Builder();
-  builder.writeln('import { Token } from \'./lox-ts\'');
+  builder.writeln(`import { ${imports.join(',')} } from './lox-ts'`);
   builder.writeln();
   builder.writeln(`export interface ${baseName} {`);
-  builder.writeln('  accept<T>(visitor: ExprVisitor<T>): T;');
+  builder.writeln(`  accept<T>(visitor: ${baseName}Visitor<T>): T;`);
   builder.writeln('}');
   builder.writeln();
   defineVisitor(builder, baseName, types);
@@ -39,7 +43,7 @@ function defineAst(outputDir: string, baseName: string, types: string[]) {
 }
 
 function defineVisitor(builder: Builder, baseName: string, types: string[]) {
-  builder.writeln('export interface ExprVisitor<T> {');
+  builder.writeln(`export interface ${baseName}Visitor<T> {`);
 
   for (let type of types) {
     const typeName = type.split('=')[0].trim();
@@ -64,7 +68,7 @@ function defineType(builder: Builder, baseName: string, className: string, field
   builder.writeln('  }');
 
   builder.writeln();
-  builder.writeln('  accept<T>(visitor: ExprVisitor<T>): T {');
+  builder.writeln(`  accept<T>(visitor: ${baseName}Visitor<T>): T {`);
   builder.writeln(`    return visitor.visit${className}${baseName}(this);`);
   builder.writeln('  }');
 

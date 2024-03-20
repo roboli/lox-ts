@@ -5,7 +5,10 @@ import {
   Literal,
   Token,
   TokenType,
-  Unary
+  Unary,
+  Stmt,
+  Print,
+  Expression
 } from "./lox-ts";
 
 export class Parser {
@@ -17,9 +20,13 @@ export class Parser {
     this.tokens = tokens;
   }
 
-  parse(): Expr | undefined {
+  parse(): Stmt[] {
+    const stmts: Stmt[] = [];
+
     try {
-      return this.expression();
+      while (!this.match(TokenType.eof)) {
+        stmts.push(this.statement());
+      }
     } catch (e) {
       if (e instanceof ParseError) {
         this.errors.push(e);
@@ -27,6 +34,28 @@ export class Parser {
         this.errors.push(new ParseError((e as Error).message, 0));
       }
     }
+
+    return stmts;
+  }
+
+  statement(): Stmt {
+    if (this.match(TokenType.print)) {
+      return this.printStmt();
+    } else {
+      return this.expressionStmt();
+    }
+  }
+
+  printStmt(): Stmt {
+    this.advance();
+    let expr = this.expression();
+    this.ensureAndAdvance(TokenType.semicolon, 'Expect ";" after statement');
+    return new Print(expr);
+  }
+
+  expressionStmt(): Stmt {
+    this.ensureAndAdvance(TokenType.semicolon, 'Expect ";" after statement');
+    return new Expression(this.expression());
   }
 
   expression(): Expr {
@@ -120,7 +149,7 @@ export class Parser {
         return new Grouping(expr);
 
       default:
-        throw new ParseError(`Unexpected ${this.peek().type} found.`, this.peek().line);
+        throw new ParseError(`Unexpected "${this.peek().lexeme}" found.`, this.peek().line);
     }
   }
 

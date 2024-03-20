@@ -43,7 +43,7 @@ function run(input: string) {
   }
 
   const parser = new Parser(tokens);
-  const expr = parser.parse();
+  const stmts = parser.parse();
 
   if (parser.errors.length > 0) {
     for (let error of parser.errors) {
@@ -54,7 +54,7 @@ function run(input: string) {
   }
 
   const interpreter = new Interpreter();
-  interpreter.interpret(expr!);
+  interpreter.interpret(stmts!);
 
   for (let error of interpreter.errors) {
     console.log(`${error.description} [${error.line}]`);

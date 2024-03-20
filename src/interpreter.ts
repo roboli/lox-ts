@@ -1,12 +1,13 @@
-import { Binary, Expr, ExprVisitor, Grouping, Literal, Token, TokenType, Unary } from "./lox-ts";
+import { Binary, Expr, ExprVisitor, Expression, Grouping, Literal, Print, Stmt, StmtVisitor, Token, TokenType, Unary } from "./lox-ts";
 
-export class Interpreter implements ExprVisitor<any> {
+export class Interpreter implements ExprVisitor<any>, StmtVisitor<void> {
   errors: InterpreterError[] = [];
 
-  interpret(expr: Expr) {
+  interpret(stmts: Stmt[]) {
     try {
-      let result = this.evaluate(expr);
-      console.log(this.stringify(result));
+      for (let stmt of stmts) {
+        this.execute(stmt);
+      }
     } catch (e) {
       if (e instanceof InterpreterError) {
         this.errors.push(e);
@@ -16,8 +17,21 @@ export class Interpreter implements ExprVisitor<any> {
     }
   }
 
+  execute(stmt: Stmt): void {
+    stmt.accept(this);
+  }
+
   evaluate(expr: Expr): any {
     return expr.accept(this);
+  }
+
+  visitPrintStmt(stmt: Print) {
+    let value = this.evaluate(stmt.expression);
+    console.log(this.stringify(value));
+  }
+
+  visitExpressionStmt(stmt: Expression) {
+    this.evaluate(stmt.expression);
   }
 
   visitBinaryExpr(expr: Binary): any {
