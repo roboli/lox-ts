@@ -47,15 +47,18 @@ function run(input: string) {
 
   if (parser.errors.length > 0) {
     for (let error of parser.errors) {
-      console.log(error);
+      console.log(`${error.description} [${error.line}]`);
     }
 
     return;
   }
 
   const interpreter = new Interpreter();
-  const result = interpreter.interpret(expr!);
-  console.log(result);
+  interpreter.interpret(expr!);
+
+  for (let error of interpreter.errors) {
+    console.log(`${error.description} [${error.line}]`);
+  }
 }
 
 main(process.argv.slice(2));

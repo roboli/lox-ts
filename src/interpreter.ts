@@ -1,13 +1,28 @@
 import { Binary, Expr, ExprVisitor, Grouping, Literal, Token, TokenType, Unary } from "./lox-ts";
 
 export class Interpreter implements ExprVisitor<any> {
-  interpret(expr: Expr): any {
+  errors: InterpreterError[] = [];
+
+  interpret(expr: Expr) {
+    try {
+      let result = this.evaluate(expr);
+      console.log(this.stringify(result));
+    } catch (e) {
+      if (e instanceof InterpreterError) {
+        this.errors.push(e);
+      } else {
+        this.errors.push(new InterpreterError((e as Error).message, 0));
+      }
+    }
+  }
+
+  evaluate(expr: Expr): any {
     return expr.accept(this);
   }
 
   visitBinaryExpr(expr: Binary): any {
-    let left = this.interpret(expr.left);
-    let right = this.interpret(expr.right);
+    let left = this.evaluate(expr.left);
+    let right = this.evaluate(expr.right);
 
     switch (expr.operator.type) {
       case TokenType.plus:
@@ -56,11 +71,11 @@ export class Interpreter implements ExprVisitor<any> {
   }
 
   visitGroupingExpr(expr: Grouping): any {
-    return this.interpret(expr.expression);
+    return this.evaluate(expr.expression);
   }
 
   visitUnaryExpr(expr: Unary): any {
-    let right = this.interpret(expr.right);
+    let right = this.evaluate(expr.right);
 
     if (TokenType.bang) {
       return !this.isTruthy(right);
@@ -85,6 +100,11 @@ export class Interpreter implements ExprVisitor<any> {
     if (value == null || value == undefined) return false;
     if (typeof value == 'boolean') return value;
     return true;
+  }
+
+  stringify(value: any): string {
+    if (value == null) return 'nil';
+    return value;
   }
 }
 
