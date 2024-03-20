@@ -4,15 +4,15 @@ export class Interpreter implements ExprVisitor<any>, StmtVisitor<void> {
   errors: InterpreterError[] = [];
 
   interpret(stmts: Stmt[]) {
-    try {
-      for (let stmt of stmts) {
+    for (let stmt of stmts) {
+      try {
         this.execute(stmt);
-      }
-    } catch (e) {
-      if (e instanceof InterpreterError) {
-        this.errors.push(e);
-      } else {
-        this.errors.push(new InterpreterError((e as Error).message, 0));
+      } catch (e) {
+        if (e instanceof InterpreterError) {
+          this.errors.push(e);
+        } else {
+          this.errors.push(new InterpreterError((e as Error).message, 0));
+        }
       }
     }
   }
