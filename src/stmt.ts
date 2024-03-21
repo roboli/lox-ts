@@ -1,4 +1,4 @@
-import { Expr } from './lox-ts'
+import { Token,Expr } from './lox-ts'
 
 export interface Stmt {
   accept<T>(visitor: StmtVisitor<T>): T;

@@ -30,6 +30,8 @@ function runFile(filename: string) {
   run(input);
 }
 
+let interpreter = new Interpreter();
+
 function run(input: string) {
   const scanner = new Scanner(input);
   const tokens = scanner.scan();
@@ -53,7 +55,6 @@ function run(input: string) {
     return;
   }
 
-  const interpreter = new Interpreter();
   interpreter.interpret(stmts!);
 
   for (let error of interpreter.errors) {

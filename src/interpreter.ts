@@ -12,7 +12,8 @@ import {
   Token,
   TokenType,
   Unary,
-  Var
+  Var,
+  Variable
 } from "./lox-ts";
 
 export class Interpreter implements ExprVisitor<any>, StmtVisitor<void> {
@@ -124,6 +125,10 @@ export class Interpreter implements ExprVisitor<any>, StmtVisitor<void> {
       this.checkIfType(expr.operator, 'number', right);
       return -right;
     }
+  }
+
+  visitVariableExpr(expr: Variable): any {
+    return this.environment.get(expr.name);
   }
 
   visitLiteralExpr(expr: Literal): any {

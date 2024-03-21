@@ -12,13 +12,14 @@ function main(args: string[]) {
     'Binary = left: Expr, operator: Token, right: Expr',
     'Grouping = expression: Expr',
     'Literal = value: any ',
-    'Unary = operator: Token, right: Expr'
+    'Unary = operator: Token, right: Expr',
+    'Variable = name: Token'
   ], ['Token']);
   defineAst(outputDir, 'Stmt', [
     'Expression = expression: Expr',
     'Print = expression: Expr',
     'Var = name: Token, initializer: Expr | null'
-  ], ['Expr']);
+  ], ['Token', 'Expr']);
 }
 
 function defineAst(outputDir: string, baseName: string, types: string[], imports: string[]) {

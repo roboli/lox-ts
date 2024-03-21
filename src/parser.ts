@@ -9,7 +9,8 @@ import {
   Stmt,
   Print,
   Expression,
-  Var
+  Var,
+  Variable
 } from "./lox-ts";
 
 export class Parser {
@@ -172,6 +173,9 @@ export class Parser {
         let expr = this.expression();
         this.ensureAndAdvance(TokenType.parenRight, 'Expected ")" not found.');
         return new Grouping(expr);
+
+      case TokenType.identifier:
+        return new Variable(this.peekAndAdvance());
 
       default:
         throw new ParseError(`Unexpected "${this.peek().lexeme}" found.`, this.peek().line);
