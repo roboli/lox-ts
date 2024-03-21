@@ -153,7 +153,7 @@ export class Interpreter implements ExprVisitor<any>, StmtVisitor<void> {
   }
 }
 
-class InterpreterError extends Error {
+export class InterpreterError extends Error {
   description: string;
   line: number;
 

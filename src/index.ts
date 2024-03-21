@@ -38,7 +38,7 @@ function run(input: string) {
 
   if (scanner.errors.length > 0) {
     for (let error of scanner.errors) {
-      console.log(`${error.description} [${error.line}]`);
+      logError(error.description, error.line);
     }
 
     return;
@@ -49,7 +49,7 @@ function run(input: string) {
 
   if (parser.errors.length > 0) {
     for (let error of parser.errors) {
-      console.log(`${error.description} [${error.line}]`);
+      logError(error.description, error.line);
     }
 
     return;
@@ -58,8 +58,12 @@ function run(input: string) {
   interpreter.interpret(stmts!);
 
   for (let error of interpreter.errors) {
-    console.log(`${error.description} [${error.line}]`);
+    logError(error.description, error.line);
   }
+}
+
+function logError(description: string, line: number) {
+  console.log(`[line ${line}] Error: ${description}`);
 }
 
 main(process.argv.slice(2));

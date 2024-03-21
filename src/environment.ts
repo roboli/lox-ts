@@ -1,4 +1,4 @@
-import { Token } from "./lox-ts";
+import { InterpreterError, Token } from "./lox-ts";
 
 export class Environment {
   vars = new Map<string, any>();
@@ -11,7 +11,7 @@ export class Environment {
     if (this.vars.has(name.lexeme)) {
       return this.vars.get(name.lexeme);
     } else {
-      throw new Error(`Variable ${name.lexeme} not defined.`);
+      throw new InterpreterError(`Undefined variable ${name.lexeme}.`, name.line);
     }
   }
 }

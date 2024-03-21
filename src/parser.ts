@@ -50,7 +50,7 @@ export class Parser {
 
   varDeclaration(): Stmt {
     this.advance();
-    this.ensure(TokenType.identifier, 'Expect identifier after var.');
+    this.ensure(TokenType.identifier, 'Expect variable name.');
     let name = this.peekAndAdvance();
     let expr = null;
 
