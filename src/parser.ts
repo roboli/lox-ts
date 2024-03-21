@@ -8,7 +8,8 @@ import {
   Unary,
   Stmt,
   Print,
-  Expression
+  Expression,
+  Var
 } from "./lox-ts";
 
 export class Parser {
@@ -25,7 +26,7 @@ export class Parser {
 
     try {
       while (!this.match(TokenType.eof)) {
-        stmts.push(this.statement());
+        stmts.push(this.declaration());
       }
     } catch (e) {
       if (e instanceof ParseError) {
@@ -36,6 +37,30 @@ export class Parser {
     }
 
     return stmts;
+  }
+
+  declaration(): Stmt {
+    if (this.match(TokenType.var)) {
+      return this.varDeclaration();
+    } else {
+      return this.statement();
+    }
+  }
+
+  varDeclaration(): Stmt {
+    this.advance();
+    this.ensure(TokenType.identifier, 'Expect identifier after var.');
+    let name = this.peekAndAdvance();
+    let expr = null;
+
+    if (this.match(TokenType.equal)) {
+      this.advance();
+      expr = this.expression();
+    }
+
+    this.ensureAndAdvance(TokenType.semicolon, 'Expect ";" after declaration.');
+
+    return new Var(name, expr);
   }
 
   statement(): Stmt {
@@ -171,12 +196,15 @@ export class Parser {
     return types.includes(this.peek().type);
   }
 
-  ensureAndAdvance(type: TokenType, msg: string) {
+  ensure(type: TokenType, msg: string) {
     if (this.peek().type != type) {
       throw new ParseError(msg, this.peek().line);
-    } else {
-      this.advance();
     }
+  }
+
+  ensureAndAdvance(type: TokenType, msg: string) {
+    this.ensure(type, msg);
+    this.advance();
   }
 }
 

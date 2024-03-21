@@ -16,7 +16,8 @@ function main(args: string[]) {
   ], ['Token']);
   defineAst(outputDir, 'Stmt', [
     'Expression = expression: Expr',
-    'Print = expression: Expr'
+    'Print = expression: Expr',
+    'Var = name: Token, initializer: Expr | null'
   ], ['Expr']);
 }
 

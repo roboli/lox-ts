@@ -5,3 +5,4 @@ export * from './parser';
 export * from './expr';
 export * from './stmt';
 export * from './interpreter';
+export * from './environment';

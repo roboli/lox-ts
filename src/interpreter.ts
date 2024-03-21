@@ -1,7 +1,23 @@
-import { Binary, Expr, ExprVisitor, Expression, Grouping, Literal, Print, Stmt, StmtVisitor, Token, TokenType, Unary } from "./lox-ts";
+import {
+  Binary,
+  Environment,
+  Expr,
+  ExprVisitor,
+  Expression,
+  Grouping,
+  Literal,
+  Print,
+  Stmt,
+  StmtVisitor,
+  Token,
+  TokenType,
+  Unary,
+  Var
+} from "./lox-ts";
 
 export class Interpreter implements ExprVisitor<any>, StmtVisitor<void> {
   errors: InterpreterError[] = [];
+  environment = new Environment();
 
   interpret(stmts: Stmt[]) {
     for (let stmt of stmts) {
@@ -23,6 +39,16 @@ export class Interpreter implements ExprVisitor<any>, StmtVisitor<void> {
 
   evaluate(expr: Expr): any {
     return expr.accept(this);
+  }
+
+  visitVarStmt(stmt: Var) {
+    let value = null;
+
+    if (stmt.initializer != null) {
+      value = this.evaluate(stmt.initializer);
+    }
+
+    this.environment.define(stmt.name.lexeme, value);
   }
 
   visitPrintStmt(stmt: Print) {
