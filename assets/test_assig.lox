@@ -1,0 +1,8 @@
+var nombre = "Robert";
+print nombre;
+nombre = "Carlos";
+print nombre;
+var otro;
+nombre = otro = "Ya!";
+print nombre;
+print otro;

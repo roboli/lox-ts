@@ -1,4 +1,5 @@
 import {
+  Assign,
   Binary,
   Environment,
   Expr,
@@ -59,6 +60,12 @@ export class Interpreter implements ExprVisitor<any>, StmtVisitor<void> {
 
   visitExpressionStmt(stmt: Expression) {
     this.evaluate(stmt.expression);
+  }
+
+  visitAssignExpr(expr: Assign): any {
+    let value = this.evaluate(expr.value);
+    this.environment.define(expr.name.lexeme, value);
+    return value;
   }
 
   visitBinaryExpr(expr: Binary): any {

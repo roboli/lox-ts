@@ -10,7 +10,8 @@ import {
   Print,
   Expression,
   Var,
-  Variable
+  Variable,
+  Assign
 } from "./lox-ts";
 
 export class Parser {
@@ -80,12 +81,26 @@ export class Parser {
   }
 
   expressionStmt(): Stmt {
+    let expr = this.expression();
     this.ensureAndAdvance(TokenType.semicolon, 'Expect ";" after statement');
-    return new Expression(this.expression());
+    return new Expression(expr);
   }
 
   expression(): Expr {
-    return this.equality();
+    return this.assignment();
+  }
+
+  assignment(): Expr {
+    let expr = this.equality();
+
+    if (expr instanceof Variable) {
+      while (this.match(TokenType.equal)) {
+        this.advance();
+        expr = new Assign((expr as Variable).name, this.assignment());
+      }
+    }
+
+    return expr;
   }
 
   equality(): Expr {

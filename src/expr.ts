@@ -5,11 +5,25 @@ export interface Expr {
 }
 
 export interface ExprVisitor<T> {
+  visitAssignExpr(expr: Assign): T;
   visitBinaryExpr(expr: Binary): T;
   visitGroupingExpr(expr: Grouping): T;
   visitLiteralExpr(expr: Literal): T;
   visitUnaryExpr(expr: Unary): T;
   visitVariableExpr(expr: Variable): T;
+}
+
+export class Assign implements Expr {
+  name: Token;
+  value: Expr;
+  constructor(name: Token,value: Expr) {
+    this.name = name
+    this.value = value
+  }
+
+  accept<T>(visitor: ExprVisitor<T>): T {
+    return visitor.visitAssignExpr(this);
+  }
 }
 
 export class Binary implements Expr {
