@@ -93,10 +93,13 @@ export class Parser {
   assignment(): Expr {
     let expr = this.equality();
 
-    if (expr instanceof Variable) {
-      while (this.match(TokenType.equal)) {
-        this.advance();
+    if (this.match(TokenType.equal)) {
+      let equals = this.peekAndAdvance();
+
+      if (expr instanceof Variable) {
         expr = new Assign((expr as Variable).name, this.assignment());
+      } else {
+        throw new ParseError('Invalid assignment target', equals.line);
       }
     }
 

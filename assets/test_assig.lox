@@ -6,3 +6,5 @@ var otro;
 nombre = otro = "Ya!";
 print nombre;
 print otro;
+nombre = otro = "No!";
+print nombre;
