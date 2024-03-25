@@ -7,6 +7,7 @@ import {
   ExprVisitor,
   Expression,
   Grouping,
+  If,
   Literal,
   Print,
   Stmt,
@@ -52,6 +53,14 @@ export class Interpreter implements ExprVisitor<any>, StmtVisitor<void> {
     }
 
     this.environment.define(stmt.name.lexeme, value);
+  }
+
+  visitIfStmt(stmt: If): void {
+    if (this.isTruthy(this.evaluate(stmt.condition))) {
+      this.execute(stmt.thenBranch);
+    } else if (stmt.elseBranch != null) {
+      this.execute(stmt.elseBranch);
+    }
   }
 
   visitPrintStmt(stmt: Print) {

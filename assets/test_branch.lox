@@ -1,0 +1,19 @@
+var numero = 20;
+
+if (numero > 30) print "Es mmmm";
+
+if (numero > 10) print "Es mayor!";
+
+if (numero < 30) {
+  var nombre = "Robert";
+  print "Es menor " + nombre;
+} else {
+  print "what?";
+}
+
+if (numero > 100) {
+  // Nada
+} else {
+  var apellido = "Oliver";
+  print "No es mayor " + apellido;
+}
