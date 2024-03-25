@@ -21,4 +21,14 @@ export class Environment {
       throw new InterpreterError(`Undefined variable ${name.lexeme}.`, name.line);
     }
   }
+
+  assign(name: Token, value: any) {
+    if (this.vars.has(name.lexeme)) {
+      this.vars.set(name.lexeme, value);
+    } else if (this.enclosing != null) {
+      this.enclosing.assign(name, value);
+    } else {
+      throw new InterpreterError(`Undefined variable ${name.lexeme}.`, name.line);
+    }
+  }
 }

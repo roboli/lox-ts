@@ -69,9 +69,9 @@ export class Parser {
   statement(): Stmt {
     if (this.match(TokenType.print)) {
       return this.printStmt();
-
     } else if (this.match(TokenType.braceLeft)) {
-      return this.blockStmt();
+      this.advance();
+      return new Block(this.blockStmt());
     } else {
       return this.expressionStmt();
     }
@@ -84,8 +84,7 @@ export class Parser {
     return new Print(expr);
   }
 
-  blockStmt(): Stmt {
-    this.advance();
+  blockStmt(): Stmt[] {
     let stmts: Stmt[] = [];
 
     while (!this.match(TokenType.braceRight, TokenType.eof)) {
@@ -94,7 +93,7 @@ export class Parser {
 
     this.ensureAndAdvance(TokenType.braceRight, 'Expect "}" after block.');
 
-    return new Block(stmts);
+    return stmts;
   }
 
   expressionStmt(): Stmt {

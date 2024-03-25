@@ -64,14 +64,15 @@ export class Interpreter implements ExprVisitor<any>, StmtVisitor<void> {
   }
 
   executeBlock(stmts: Stmt[], environment: Environment) {
-    let _environment = this.environment;
-    this.environment = environment;
-
-    for (let stmt of stmts) {
-      this.execute(stmt);
+    let previous = this.environment;
+    try {
+      this.environment = environment;
+      for (let stmt of stmts) {
+        this.execute(stmt);
+      }
+    } finally {
+      this.environment = previous;
     }
-
-    this.environment = _environment;
   }
 
   visitExpressionStmt(stmt: Expression) {
@@ -80,7 +81,7 @@ export class Interpreter implements ExprVisitor<any>, StmtVisitor<void> {
 
   visitAssignExpr(expr: Assign): any {
     let value = this.evaluate(expr.value);
-    this.environment.define(expr.name.lexeme, value);
+    this.environment.assign(expr.name, value);
     return value;
   }
 
