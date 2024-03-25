@@ -1,6 +1,7 @@
 import {
   Assign,
   Binary,
+  Block,
   Environment,
   Expr,
   ExprVisitor,
@@ -56,6 +57,21 @@ export class Interpreter implements ExprVisitor<any>, StmtVisitor<void> {
   visitPrintStmt(stmt: Print) {
     let value = this.evaluate(stmt.expression);
     console.log(this.stringify(value));
+  }
+
+  visitBlockStmt(stmt: Block) {
+    this.executeBlock(stmt.statements, new Environment(this.environment));
+  }
+
+  executeBlock(stmts: Stmt[], environment: Environment) {
+    let _environment = this.environment;
+    this.environment = environment;
+
+    for (let stmt of stmts) {
+      this.execute(stmt);
+    }
+
+    this.environment = _environment;
   }
 
   visitExpressionStmt(stmt: Expression) {

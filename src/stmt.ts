@@ -5,9 +5,21 @@ export interface Stmt {
 }
 
 export interface StmtVisitor<T> {
+  visitBlockStmt(stmt: Block): T;
   visitExpressionStmt(stmt: Expression): T;
   visitPrintStmt(stmt: Print): T;
   visitVarStmt(stmt: Var): T;
+}
+
+export class Block implements Stmt {
+  statements: Stmt[];
+  constructor(statements: Stmt[]) {
+    this.statements = statements
+  }
+
+  accept<T>(visitor: StmtVisitor<T>): T {
+    return visitor.visitBlockStmt(this);
+  }
 }
 
 export class Expression implements Stmt {

@@ -1,0 +1,15 @@
+var nombre = "Robert";
+print nombre;
+{
+  var nombre = "Carlos";
+  var apellido = "Oliver";
+  print nombre;
+  print apellido;
+  {
+    var nombre = "Gonze";
+    print nombre;
+  }
+  print nombre;
+}
+print nombre;
+print apellido;

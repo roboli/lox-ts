@@ -11,7 +11,8 @@ import {
   Expression,
   Var,
   Variable,
-  Assign
+  Assign,
+  Block
 } from "./lox-ts";
 
 export class Parser {
@@ -68,6 +69,9 @@ export class Parser {
   statement(): Stmt {
     if (this.match(TokenType.print)) {
       return this.printStmt();
+
+    } else if (this.match(TokenType.braceLeft)) {
+      return this.blockStmt();
     } else {
       return this.expressionStmt();
     }
@@ -78,6 +82,19 @@ export class Parser {
     let expr = this.expression();
     this.ensureAndAdvance(TokenType.semicolon, 'Expect ";" after statement');
     return new Print(expr);
+  }
+
+  blockStmt(): Stmt {
+    this.advance();
+    let stmts: Stmt[] = [];
+
+    while (!this.match(TokenType.braceRight, TokenType.eof)) {
+      stmts.push(this.declaration());
+    }
+
+    this.ensureAndAdvance(TokenType.braceRight, 'Expect "}" after block.');
+
+    return new Block(stmts);
   }
 
   expressionStmt(): Stmt {
