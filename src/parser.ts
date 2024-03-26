@@ -76,6 +76,8 @@ export class Parser {
       return this.ifStmt();
     } else if (this.match(TokenType.while)) {
       return this.whileStmt();
+    } else if (this.match(TokenType.for)) {
+      return this.forStmt();
     } else if (this.match(TokenType.braceLeft)) {
       this.advance();
       return new Block(this.blockStmt());
@@ -113,6 +115,50 @@ export class Parser {
     let condition = this.expression();
     this.ensureAndAdvance(TokenType.parenRight, 'Expect ")" after condition.');
     return new While(condition, this.statement());
+  }
+
+  forStmt(): Stmt {
+    this.advance();
+    this.ensureAndAdvance(TokenType.parenLeft, 'Expect "(" after for.');
+    let init;
+
+    if (!this.match(TokenType.semicolon)) {
+      if (this.match(TokenType.var)) {
+        init = this.varDeclaration();
+      } else {
+        init = this.expressionStmt();
+      }
+    } else {
+      this.ensureAndAdvance(TokenType.semicolon, 'Expect ";" after initializer.');
+    }
+
+    let condition: Expr = new Literal(true);
+
+    if (!this.match(TokenType.semicolon)) {
+      condition = this.expression();
+    }
+
+    this.ensureAndAdvance(TokenType.semicolon, 'Expect ";" after condition.');
+    let increment;
+
+    if (!this.match(TokenType.parenRight)) {
+      increment = this.expression();
+    }
+
+    this.ensureAndAdvance(TokenType.parenRight, 'Expect ")" after increment.');
+    let stmt = this.statement();
+
+    if (increment) {
+      stmt = new While(condition, new Block([stmt, new Expression(increment)]));
+    } else {
+      stmt = new While(condition, new Block([stmt]));
+    }
+
+    if (init) {
+      stmt = new Block([init, stmt]);
+    }
+
+    return stmt;
   }
 
   blockStmt(): Stmt[] {
