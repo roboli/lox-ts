@@ -9,6 +9,7 @@ import {
   Grouping,
   If,
   Literal,
+  Logical,
   Print,
   Stmt,
   StmtVisitor,
@@ -166,6 +167,20 @@ export class Interpreter implements ExprVisitor<any>, StmtVisitor<void> {
 
   visitLiteralExpr(expr: Literal): any {
     return expr.value;
+  }
+
+  visitLogicalExpr(expr: Logical): any {
+    let left = this.evaluate(expr.left);
+
+    if (this.isTruthy(left) && expr.operator.type == TokenType.or) {
+      return left;
+    }
+
+    if (!this.isTruthy(left) && expr.operator.type == TokenType.and) {
+      return left;
+    }
+
+    return this.evaluate(expr.right);
   }
 
   checkIfType(token: Token, type: string, ...values: any[]) {

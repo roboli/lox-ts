@@ -13,6 +13,7 @@ function main(args: string[]) {
     'Binary = left: Expr, operator: Token, right: Expr',
     'Grouping = expression: Expr',
     'Literal = value: any ',
+    'Logical = left: Expr, operator: Token, right: Expr',
     'Unary = operator: Token, right: Expr',
     'Variable = name: Token'
   ], ['Token']);

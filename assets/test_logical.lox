@@ -1,0 +1,43 @@
+print "true and true";
+print true and true;
+print "true and false";
+print true and false;
+print "false and true";
+print false and true;
+print "false and false";
+print false and false;
+print "--";
+
+print "true or true";
+print true or true;
+print "true or false";
+print true or false;
+print "false or true";
+print false or true;
+print "false or false";
+print false or false;
+print "--";
+
+print "true and 1 + 2";
+print true and 1 + 2;
+print "false and 1 + 2";
+print false and 1 + 2;
+print "1 + 2 and true";
+print 1 + 2 and true;
+print "1 + 2 and false";
+print 1 + 2 and false;
+print "1 + 2 and 1 + 3";
+print 1 + 2 and 1 + 3;
+print "--";
+
+print "true or 1 + 2";
+print true or 1 + 2;
+print "false or 1 + 2";
+print false or 1 + 2;
+print "1 + 2 or true";
+print 1 + 2 or true;
+print "1 + 2 or false";
+print 1 + 2 or false;
+print "1 + 2 or 1 + 3";
+print 1 + 2 or 1 + 3;
+print "--";

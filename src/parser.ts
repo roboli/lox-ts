@@ -13,7 +13,8 @@ import {
   Variable,
   Assign,
   Block,
-  If
+  If,
+  Logical
 } from "./lox-ts";
 
 export class Parser {
@@ -126,7 +127,7 @@ export class Parser {
   }
 
   assignment(): Expr {
-    let expr = this.equality();
+    let expr = this.or();
 
     if (this.match(TokenType.equal)) {
       let equals = this.peekAndAdvance();
@@ -136,6 +137,30 @@ export class Parser {
       } else {
         throw new ParseError('Invalid assignment target', equals.line);
       }
+    }
+
+    return expr;
+  }
+
+  or(): Expr {
+    let expr = this.and();
+
+    while (this.match(TokenType.or)) {
+      let operator = this.peekAndAdvance();
+      let right = this.and();
+      expr = new Logical(expr, operator, right);
+    }
+
+    return expr;
+  }
+
+  and(): Expr {
+    let expr = this.equality();
+
+    while (this.match(TokenType.and)) {
+      let operator = this.peekAndAdvance();
+      let right = this.equality();
+      expr = new Logical(expr, operator, right);
     }
 
     return expr;
