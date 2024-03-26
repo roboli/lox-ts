@@ -1,7 +1,9 @@
+import { Callable } from "./callable";
 import {
   Assign,
   Binary,
   Block,
+  Call,
   Environment,
   Expr,
   ExprVisitor,
@@ -21,9 +23,25 @@ import {
   While
 } from "./lox-ts";
 
+class Clock implements Callable {
+  arity = () => 0;
+
+  call(): any {
+    return new Date().getTime();
+  }
+
+  toString = () => '<native />';
+}
+
 export class Interpreter implements ExprVisitor<any>, StmtVisitor<void> {
   errors: InterpreterError[] = [];
-  environment = new Environment();
+  globals: Environment = new Environment();
+  environment: Environment;
+
+  constructor() {
+    this.globals.define('clock', new Clock());
+    this.environment = new Environment(this.globals);
+  }
 
   interpret(stmts: Stmt[]) {
     for (let stmt of stmts) {
@@ -150,6 +168,17 @@ export class Interpreter implements ExprVisitor<any>, StmtVisitor<void> {
       case TokenType.bangEqual:
         return left != right;
     }
+  }
+
+  visitCallExpr(expr: Call) {
+    let callee = this.evaluate(expr.callee);
+    let fun = (callee as Callable);
+
+    if (expr.args.length != fun.arity()) {
+      throw new InterpreterError('Wrong number of args', expr.paren.line);
+    }
+
+    return fun.call(expr.args);
   }
 
   visitGroupingExpr(expr: Grouping): any {

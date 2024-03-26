@@ -15,7 +15,8 @@ import {
   Block,
   If,
   Logical,
-  While
+  While,
+  Call
 } from "./lox-ts";
 
 export class Parser {
@@ -282,8 +283,29 @@ export class Parser {
       let right = this.unary();
       return new Unary(operator, right);
     } else {
-      return this.primary();
+      return this.call();
     }
+  }
+
+  call(): Expr {
+    let expr = this.primary();
+
+    if (this.match(TokenType.parenLeft)) {
+      let paren = this.peekAndAdvance();
+      let args: Expr[] = [];
+
+      if (!this.match(TokenType.parenRight)) {
+        do {
+          args.push(this.expression());
+        } while (this.match(TokenType.comma))
+      }
+
+      this.ensureAndAdvance(TokenType.parenRight, 'Expect ")" after arguments.');
+
+      return new Call(expr, paren, args);
+    }
+
+    return expr;
   }
 
   primary(): Expr {
