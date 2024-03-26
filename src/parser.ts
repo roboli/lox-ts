@@ -290,22 +290,30 @@ export class Parser {
   call(): Expr {
     let expr = this.primary();
 
-    if (this.match(TokenType.parenLeft)) {
-      let paren = this.peekAndAdvance();
-      let args: Expr[] = [];
-
-      if (!this.match(TokenType.parenRight)) {
-        do {
-          args.push(this.expression());
-        } while (this.match(TokenType.comma))
-      }
-
-      this.ensureAndAdvance(TokenType.parenRight, 'Expect ")" after arguments.');
-
-      return new Call(expr, paren, args);
+    while (this.match(TokenType.parenLeft)) {
+      expr = this.finishCall(expr);
     }
 
     return expr;
+  }
+
+  finishCall(callee: Expr): Expr {
+    let paren = this.peekAndAdvance();
+    let args: Expr[] = [];
+
+    if (!this.match(TokenType.parenRight)) {
+      do {
+        if (args.length >= 255) {
+          this.errors.push(new ParseError('Cannot have more than 255 arguments', this.peek().line));
+        }
+
+        args.push(this.expression());
+      } while (this.match(TokenType.comma))
+    }
+
+    this.ensureAndAdvance(TokenType.parenRight, 'Expect ")" after arguments.');
+
+    return new Call(callee, paren, args);
   }
 
   primary(): Expr {

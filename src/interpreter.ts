@@ -1,5 +1,5 @@
-import { Callable } from "./callable";
 import {
+  LoxCallable,
   Assign,
   Binary,
   Block,
@@ -23,7 +23,7 @@ import {
   While
 } from "./lox-ts";
 
-class Clock implements Callable {
+class Clock implements LoxCallable {
   arity = () => 0;
 
   call(): any {
@@ -36,11 +36,10 @@ class Clock implements Callable {
 export class Interpreter implements ExprVisitor<any>, StmtVisitor<void> {
   errors: InterpreterError[] = [];
   globals: Environment = new Environment();
-  environment: Environment;
+  environment: Environment = this.globals;
 
   constructor() {
     this.globals.define('clock', new Clock());
-    this.environment = new Environment(this.globals);
   }
 
   interpret(stmts: Stmt[]) {
@@ -172,13 +171,17 @@ export class Interpreter implements ExprVisitor<any>, StmtVisitor<void> {
 
   visitCallExpr(expr: Call) {
     let callee = this.evaluate(expr.callee);
-    let fun = (callee as Callable);
 
+    if ((callee as LoxCallable).arity == undefined) {
+      throw new InterpreterError('Can only call functions and classes', expr.paren.line);
+    }
+
+    let fun = (callee as LoxCallable);
     if (expr.args.length != fun.arity()) {
       throw new InterpreterError('Wrong number of args', expr.paren.line);
     }
 
-    return fun.call(expr.args);
+    return fun.call(expr.args.map(arg => this.evaluate(arg)));
   }
 
   visitGroupingExpr(expr: Grouping): any {

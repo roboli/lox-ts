@@ -6,3 +6,4 @@ export * from './expr';
 export * from './stmt';
 export * from './interpreter';
 export * from './environment';
+export * from './lox-callable';
