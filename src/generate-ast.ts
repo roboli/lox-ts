@@ -22,7 +22,8 @@ function main(args: string[]) {
     'Expression = expression: Expr',
     'If = condition: Expr, thenBranch: Stmt, elseBranch: Stmt | null',
     'Print = expression: Expr',
-    'Var = name: Token, initializer: Expr | null'
+    'Var = name: Token, initializer: Expr | null',
+    'While = condition: Expr, body: Stmt'
   ], ['Token', 'Expr']);
 }
 

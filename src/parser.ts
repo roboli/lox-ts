@@ -14,7 +14,8 @@ import {
   Assign,
   Block,
   If,
-  Logical
+  Logical,
+  While
 } from "./lox-ts";
 
 export class Parser {
@@ -73,6 +74,8 @@ export class Parser {
       return this.printStmt();
     } else if (this.match(TokenType.if)) {
       return this.ifStmt();
+    } else if (this.match(TokenType.while)) {
+      return this.whileStmt();
     } else if (this.match(TokenType.braceLeft)) {
       this.advance();
       return new Block(this.blockStmt());
@@ -102,6 +105,14 @@ export class Parser {
     }
 
     return new If(condition, thenBranch, elseBranch);
+  }
+
+  whileStmt(): Stmt {
+    this.advance()
+    this.ensureAndAdvance(TokenType.parenLeft, 'Expect "(" after while.');
+    let condition = this.expression();
+    this.ensureAndAdvance(TokenType.parenRight, 'Expect ")" after condition.');
+    return new While(condition, this.statement());
   }
 
   blockStmt(): Stmt[] {

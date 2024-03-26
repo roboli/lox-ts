@@ -17,7 +17,8 @@ import {
   TokenType,
   Unary,
   Var,
-  Variable
+  Variable,
+  While
 } from "./lox-ts";
 
 export class Interpreter implements ExprVisitor<any>, StmtVisitor<void> {
@@ -61,6 +62,12 @@ export class Interpreter implements ExprVisitor<any>, StmtVisitor<void> {
       this.execute(stmt.thenBranch);
     } else if (stmt.elseBranch != null) {
       this.execute(stmt.elseBranch);
+    }
+  }
+
+  visitWhileStmt(stmt: While): void {
+    while (this.isTruthy(this.evaluate(stmt.condition))) {
+      this.execute(stmt.body);
     }
   }
 
