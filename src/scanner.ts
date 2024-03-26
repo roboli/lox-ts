@@ -302,7 +302,7 @@ export class Scanner {
     }
 
     let type: any = this.keywords[value as keyof typeof this.keywords];
-    if (!type) {
+    if (type == undefined) {
       type = TokenType.identifier;
     }
 
