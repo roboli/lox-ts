@@ -30,7 +30,7 @@ class Clock implements LoxCallable {
     return new Date().getTime();
   }
 
-  toString = () => '<native />';
+  toString = () => '<native fn>';
 }
 
 export class Interpreter implements ExprVisitor<any>, StmtVisitor<void> {
