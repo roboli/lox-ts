@@ -14,14 +14,14 @@ export class LoxFunction implements LoxCallable {
   }
 
   call(interpreter: Interpreter, args: any[]): any {
-    let closure = new Environment(this.closure);
+    let environment = new Environment(this.closure);
 
     for (let i = 0; i < args.length; i++) {
-      closure.define(this.declaration.params[i].lexeme, args[i]);
+      environment.define(this.declaration.params[i].lexeme, args[i]);
     }
 
     try {
-      interpreter.executeBlock(this.declaration.body, closure);
+      interpreter.executeBlock(this.declaration.body, environment);
     } catch (e) {
       if (e instanceof ReturnException) {
         return e.value;
