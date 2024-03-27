@@ -22,7 +22,8 @@ import {
   Variable,
   While,
   Fun,
-  LoxFunction
+  LoxFunction,
+  Return
 } from "./lox-ts";
 
 class Clock implements LoxCallable {
@@ -33,6 +34,13 @@ class Clock implements LoxCallable {
   }
 
   toString = () => '<native fn>';
+}
+
+export class ReturnException {
+  value: any;
+  constructor(value: any) {
+    this.value = value;
+  }
 }
 
 export class Interpreter implements ExprVisitor<any>, StmtVisitor<void> {
@@ -93,6 +101,16 @@ export class Interpreter implements ExprVisitor<any>, StmtVisitor<void> {
   visitPrintStmt(stmt: Print) {
     let value = this.evaluate(stmt.expression);
     console.log(this.stringify(value));
+  }
+
+  visitReturnStmt(stmt: Return) {
+    let value = null;
+
+    if (stmt.value) {
+      value = this.evaluate(stmt.value);
+    }
+
+    throw new ReturnException(value);
   }
 
   visitBlockStmt(stmt: Block) {

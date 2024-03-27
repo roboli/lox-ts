@@ -24,6 +24,7 @@ function main(args: string[]) {
     'Fun = name: Token, params: Token[], body: Stmt[]',
     'If = condition: Expr, thenBranch: Stmt, elseBranch: Stmt | null',
     'Print = expression: Expr',
+    'Return = keyword: Token, value: Expr | null',
     'Var = name: Token, initializer: Expr | null',
     'While = condition: Expr, body: Stmt'
   ], ['Token', 'Expr']);

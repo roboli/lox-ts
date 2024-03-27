@@ -17,7 +17,8 @@ import {
   Logical,
   While,
   Call,
-  Fun
+  Fun,
+  Return
 } from "./lox-ts";
 
 export class Parser {
@@ -110,6 +111,8 @@ export class Parser {
     } else if (this.match(TokenType.braceLeft)) {
       this.advance();
       return new Block(this.blockStmt());
+    } else if (this.match(TokenType.return)) {
+      return this.returnStmt();
     } else {
       return this.expressionStmt();
     }
@@ -120,6 +123,18 @@ export class Parser {
     let expr = this.expression();
     this.ensureAndAdvance(TokenType.semicolon, 'Expect ";" after statement');
     return new Print(expr);
+  }
+
+  returnStmt(): Stmt {
+    let keyword = this.peekAndAdvance();
+    let expr = null;
+
+    if (!this.match(TokenType.semicolon)) {
+      expr = this.expression();
+    }
+
+    this.ensureAndAdvance(TokenType.semicolon, 'Expect ";" after return.');
+    return new Return(keyword, expr);
   }
 
   ifStmt(): Stmt {

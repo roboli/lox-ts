@@ -1,4 +1,4 @@
-import { Interpreter, LoxCallable, Fun, Environment } from "./lox-ts";
+import { Interpreter, LoxCallable, Fun, Environment, Return, ReturnException } from "./lox-ts";
 
 export class LoxFunction implements LoxCallable {
   declaration: Fun;
@@ -18,6 +18,12 @@ export class LoxFunction implements LoxCallable {
       closure.define(this.declaration.params[i].lexeme, args[i]);
     }
 
-    interpreter.executeBlock(this.declaration.body, closure);
+    try {
+      interpreter.executeBlock(this.declaration.body, closure);
+    } catch (e) {
+      if (e instanceof ReturnException) {
+        return e.value;
+      }
+    }
   }
 }
