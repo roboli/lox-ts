@@ -1,4 +1,6 @@
+import { Interpreter } from "./interpreter";
+
 export interface LoxCallable {
   arity(): number;
-  call(args: any[]): any;
+  call(interpreter: Interpreter, args: any[]): any;
 }

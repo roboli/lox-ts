@@ -20,7 +20,9 @@ import {
   Unary,
   Var,
   Variable,
-  While
+  While,
+  Fun,
+  LoxFunction
 } from "./lox-ts";
 
 class Clock implements LoxCallable {
@@ -113,6 +115,11 @@ export class Interpreter implements ExprVisitor<any>, StmtVisitor<void> {
     this.evaluate(stmt.expression);
   }
 
+  visitFunStmt(stmt: Fun) {
+    let fun = new LoxFunction(stmt);
+    this.environment.define(stmt.name.lexeme, fun);
+  }
+
   visitAssignExpr(expr: Assign): any {
     let value = this.evaluate(expr.value);
     this.environment.assign(expr.name, value);
@@ -181,7 +188,7 @@ export class Interpreter implements ExprVisitor<any>, StmtVisitor<void> {
       throw new InterpreterError('Wrong number of args', expr.paren.line);
     }
 
-    return fun.call(expr.args.map(arg => this.evaluate(arg)));
+    return fun.call(this, expr.args.map(arg => this.evaluate(arg)));
   }
 
   visitGroupingExpr(expr: Grouping): any {

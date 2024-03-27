@@ -16,7 +16,8 @@ import {
   If,
   Logical,
   While,
-  Call
+  Call,
+  Fun
 } from "./lox-ts";
 
 export class Parser {
@@ -47,11 +48,38 @@ export class Parser {
   }
 
   declaration(): Stmt {
-    if (this.match(TokenType.var)) {
+    if (this.match(TokenType.fun)) {
+      return this.fun();
+    } else if (this.match(TokenType.var)) {
       return this.varDeclaration();
     } else {
       return this.statement();
     }
+  }
+
+  fun(): Stmt {
+    this.advance();
+    this.ensure(TokenType.identifier, 'Expect function name.');
+    let name = this.peekAndAdvance();
+
+    this.ensureAndAdvance(TokenType.parenLeft, 'Expect "(" after function name.');
+    let params: Token[] = [];
+
+    if (!this.match(TokenType.parenRight)) {
+      do {
+        if (params.length >= 255) {
+          this.errors.push(new ParseError('Cannot have more than 255 params', this.peek().line));
+        }
+
+        this.ensure(TokenType.identifier, 'Expect param name.');
+        params.push(this.peekAndAdvance());
+      } while (this.matchAndAdvance(TokenType.comma))
+    }
+
+    this.ensureAndAdvance(TokenType.parenRight, 'Expect ")" after function params.');
+    this.ensureAndAdvance(TokenType.braceLeft, 'Expect "{" before function body.');
+
+    return new Fun(name, params, this.blockStmt());
   }
 
   varDeclaration(): Stmt {
@@ -308,7 +336,7 @@ export class Parser {
         }
 
         args.push(this.expression());
-      } while (this.match(TokenType.comma))
+      } while (this.matchAndAdvance(TokenType.comma))
     }
 
     this.ensureAndAdvance(TokenType.parenRight, 'Expect ")" after arguments.');
@@ -363,6 +391,14 @@ export class Parser {
 
   match(...types: TokenType[]): boolean {
     return types.includes(this.peek().type);
+  }
+
+  matchAndAdvance(...types: TokenType[]): boolean {
+    const result = this.match(...types);
+    if (result) {
+      this.advance();
+    }
+    return result;
   }
 
   ensure(type: TokenType, msg: string) {

@@ -7,3 +7,4 @@ export * from './stmt';
 export * from './interpreter';
 export * from './environment';
 export * from './lox-callable';
+export * from './lox-function';

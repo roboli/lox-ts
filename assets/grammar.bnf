@@ -1,8 +1,11 @@
 program     -> declaration* EOF ;
 
-declaration -> varDecl
+declaration -> funDecl
+             | varDecl
              | statement ;
 
+funDecl     -> "fun" function ;
+function    -> IDENTIFIER "(" parameters? ")" block ;
 varDecl     -> "var" IDENTIFIER ( "=" expression )? ";" ;
 
 statement   -> exprStmt
@@ -38,3 +41,4 @@ primary     -> NUMBER
 	     | IDENTIFIER ;
 
 arguments   -> expression ( "," expression )* ;
+parameters  -> IDENTIFIER ( "," IDENTIFIER )* ;
