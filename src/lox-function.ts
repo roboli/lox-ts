@@ -2,9 +2,11 @@ import { Interpreter, LoxCallable, Fun, Environment, Return, ReturnException } f
 
 export class LoxFunction implements LoxCallable {
   declaration: Fun;
+  closure: Environment;
 
-  constructor(declaration: Fun) {
+  constructor(declaration: Fun, closure: Environment) {
     this.declaration = declaration;
+    this.closure = closure;
   }
 
   arity() {
@@ -12,7 +14,7 @@ export class LoxFunction implements LoxCallable {
   }
 
   call(interpreter: Interpreter, args: any[]): any {
-    let closure = new Environment(interpreter.globals);
+    let closure = new Environment(this.closure);
 
     for (let i = 0; i < args.length; i++) {
       closure.define(this.declaration.params[i].lexeme, args[i]);

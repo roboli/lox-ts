@@ -134,7 +134,7 @@ export class Interpreter implements ExprVisitor<any>, StmtVisitor<void> {
   }
 
   visitFunStmt(stmt: Fun) {
-    let fun = new LoxFunction(stmt);
+    let fun = new LoxFunction(stmt, this.environment);
     this.environment.define(stmt.name.lexeme, fun);
   }
 
