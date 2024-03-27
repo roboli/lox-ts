@@ -23,6 +23,8 @@ export class LoxFunction implements LoxCallable {
     } catch (e) {
       if (e instanceof ReturnException) {
         return e.value;
+      } else {
+        throw e;
       }
     }
   }
