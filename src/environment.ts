@@ -22,6 +22,14 @@ export class Environment {
     }
   }
 
+  getAt(distance: number, name: Token): any {
+    let environment: Environment | null | undefined = this;
+    for (let i = 0; i < distance; i++) {
+      environment = environment?.enclosing;
+    }
+    return environment?.get(name);
+  }
+
   assign(name: Token, value: any) {
     if (this.vars.has(name.lexeme)) {
       this.vars.set(name.lexeme, value);
@@ -30,5 +38,14 @@ export class Environment {
     } else {
       throw new InterpreterError(`Undefined variable ${name.lexeme}.`, name.line);
     }
+  }
+
+  assignAt(distance: number, name: Token, value: any) {
+    let environment: Environment | null | undefined = this;
+    for (let i = 0; i < distance; i++) {
+      environment = environment?.enclosing;
+    }
+
+    environment?.define(name.lexeme, value);
   }
 }

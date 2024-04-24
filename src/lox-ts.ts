@@ -5,6 +5,7 @@ export * from './parser';
 export * from './expr';
 export * from './stmt';
 export * from './interpreter';
+export * from './resolver';
 export * from './environment';
 export * from './lox-callable';
 export * from './lox-function';

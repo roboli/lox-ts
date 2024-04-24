@@ -43,8 +43,11 @@ export class ReturnException {
   }
 }
 
+type Local = Map<Expr, number>;
+
 export class Interpreter implements ExprVisitor<any>, StmtVisitor<void> {
   errors: InterpreterError[] = [];
+  locals: Local = new Map<Expr, number>();
   globals: Environment = new Environment();
   environment: Environment = this.globals;
 
@@ -140,7 +143,13 @@ export class Interpreter implements ExprVisitor<any>, StmtVisitor<void> {
 
   visitAssignExpr(expr: Assign): any {
     let value = this.evaluate(expr.value);
-    this.environment.assign(expr.name, value);
+    let distance = this.locals.get(expr);
+    if (distance != null) {
+      this.environment.assignAt(distance, expr.name, value);
+    } else {
+      this.globals.assign(expr.name, value);
+    }
+
     return value;
   }
 
@@ -226,7 +235,7 @@ export class Interpreter implements ExprVisitor<any>, StmtVisitor<void> {
   }
 
   visitVariableExpr(expr: Variable): any {
-    return this.environment.get(expr.name);
+    return this.lookUpVariable(expr, expr.name);
   }
 
   visitLiteralExpr(expr: Literal): any {
@@ -262,6 +271,19 @@ export class Interpreter implements ExprVisitor<any>, StmtVisitor<void> {
   stringify(value: any): string {
     if (value == null) return 'nil';
     return value;
+  }
+
+  resolve(expr: Expr, distance: number) {
+    this.locals.set(expr, distance);
+  }
+
+  lookUpVariable(expr: Expr, name: Token) {
+    let distance = this.locals.get(expr);
+    if (distance != undefined) {
+      return this.environment.getAt(distance, name);
+    } else {
+      return this.globals.get(name);
+    }
   }
 }
 

@@ -1,7 +1,11 @@
 import * as fs from 'fs';
 import prompt from 'prompt-sync';
-import { Interpreter, Parser, Scanner } from './lox-ts';
-import { AstPrinter } from './ast-visitor';
+import {
+  Interpreter,
+  Parser,
+  Scanner,
+  Resolver
+} from './lox-ts';
 
 function main(args: string[]) {
   if (args.length > 1) {
@@ -49,6 +53,17 @@ function run(input: string) {
 
   if (parser.errors.length > 0) {
     for (let error of parser.errors) {
+      logError(error.description, error.line);
+    }
+
+    return;
+  }
+
+  const resolver = new Resolver(interpreter);
+  resolver.resolve(stmts);
+
+  if (resolver.errors.length > 0) {
+    for (let error of resolver.errors) {
       logError(error.description, error.line);
     }
 
