@@ -12,6 +12,14 @@ export class Environment {
     this.vars.set(key, value);
   }
 
+  ancestor(distance: number): Environment | null | undefined {
+    let environment: Environment | null | undefined = this;
+    for (let i = 0; i < distance; i++) {
+      environment = environment?.enclosing;
+    }
+    return environment;
+  }
+
   get(name: Token): any {
     if (this.vars.has(name.lexeme)) {
       return this.vars.get(name.lexeme);
@@ -23,11 +31,7 @@ export class Environment {
   }
 
   getAt(distance: number, name: Token): any {
-    let environment: Environment | null | undefined = this;
-    for (let i = 0; i < distance; i++) {
-      environment = environment?.enclosing;
-    }
-    return environment?.get(name);
+    return this.ancestor(distance)?.get(name);
   }
 
   assign(name: Token, value: any) {
@@ -41,11 +45,6 @@ export class Environment {
   }
 
   assignAt(distance: number, name: Token, value: any) {
-    let environment: Environment | null | undefined = this;
-    for (let i = 0; i < distance; i++) {
-      environment = environment?.enclosing;
-    }
-
-    environment?.define(name.lexeme, value);
+    this.ancestor(distance)?.define(name.lexeme, value);
   }
 }
