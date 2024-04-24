@@ -5,8 +5,8 @@ export interface Stmt {
 }
 
 export interface StmtVisitor<T> {
-  visitClassStmt(stmt: Class): T;
   visitBlockStmt(stmt: Block): T;
+  visitClassStmt(stmt: Class): T;
   visitExpressionStmt(stmt: Expression): T;
   visitFunStmt(stmt: Fun): T;
   visitIfStmt(stmt: If): T;
@@ -14,6 +14,17 @@ export interface StmtVisitor<T> {
   visitReturnStmt(stmt: Return): T;
   visitVarStmt(stmt: Var): T;
   visitWhileStmt(stmt: While): T;
+}
+
+export class Block implements Stmt {
+  statements: Stmt[];
+  constructor(statements: Stmt[]) {
+    this.statements = statements
+  }
+
+  accept<T>(visitor: StmtVisitor<T>): T {
+    return visitor.visitBlockStmt(this);
+  }
 }
 
 export class Class implements Stmt {
@@ -26,17 +37,6 @@ export class Class implements Stmt {
 
   accept<T>(visitor: StmtVisitor<T>): T {
     return visitor.visitClassStmt(this);
-  }
-}
-
-export class Block implements Stmt {
-  statements: Stmt[];
-  constructor(statements: Stmt[]) {
-    this.statements = statements
-  }
-
-  accept<T>(visitor: StmtVisitor<T>): T {
-    return visitor.visitBlockStmt(this);
   }
 }
 
