@@ -139,12 +139,14 @@ export class Interpreter implements ExprVisitor<any>, StmtVisitor<void> {
   }
 
   visitClassStmt(stmt: Class) {
+    this.environment.define(stmt.name.lexeme, null);
+
     let methods: LoxFunction[] = [];
     for (let method of stmt.methods) {
       methods.push(new LoxFunction(method, this.environment));
     }
 
-    this.environment.define(stmt.name.lexeme, new LoxClass(stmt.name.lexeme, methods));
+    this.environment.assign(stmt.name, new LoxClass(stmt.name.lexeme, methods));
   }
 
   visitFunStmt(stmt: Fun) {
