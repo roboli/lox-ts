@@ -4,6 +4,7 @@ export enum TokenType {
   bangEqual,
   braceLeft,
   braceRight,
+  class,
   comma,
   else,
   equal,

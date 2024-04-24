@@ -3,6 +3,7 @@ import {
   Binary,
   Block,
   Call,
+  Class,
   Expr,
   ExprVisitor,
   Expression,
@@ -85,6 +86,11 @@ export class Resolver implements ExprVisitor<void>, StmtVisitor<void> {
       this.resolveStmt(stm);
     }
     this.endScope();
+  }
+
+  visitClassStmt(stmt: Class) {
+    this.declares(stmt.name);
+    this.defines(stmt.name);
   }
 
   visitFunStmt(stmt: Fun) {

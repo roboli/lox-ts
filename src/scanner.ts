@@ -17,6 +17,7 @@ export class Scanner {
 
   keywords = {
     'and': TokenType.and,
+    'class': TokenType.class,
     'else': TokenType.else,
     'false': TokenType.false,
     'for': TokenType.for,

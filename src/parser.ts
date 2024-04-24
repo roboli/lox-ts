@@ -18,7 +18,8 @@ import {
   While,
   Call,
   Fun,
-  Return
+  Return,
+  Class
 } from "./lox-ts";
 
 export class Parser {
@@ -49,13 +50,31 @@ export class Parser {
   }
 
   declaration(): Stmt {
-    if (this.match(TokenType.fun)) {
+    if (this.match(TokenType.class)) {
+      return this.classDeclaration();
+    } else if (this.match(TokenType.fun)) {
       return this.fun();
     } else if (this.match(TokenType.var)) {
       return this.varDeclaration();
     } else {
       return this.statement();
     }
+  }
+
+  classDeclaration(): Stmt {
+    this.advance();
+    this.ensure(TokenType.identifier, 'Expect class name.');
+    let name = this.peekAndAdvance();
+
+    this.ensureAndAdvance(TokenType.braceLeft, 'Expect "{" after class name.');
+    let methods: Fun[] = [];
+
+    while (!this.match(TokenType.braceRight, TokenType.eof)) {
+      methods.push(this.fun() as Fun);
+    }
+
+    this.ensureAndAdvance(TokenType.braceRight, 'Expect closing "}".');
+    return new Class(name, methods);
   }
 
   fun(): Stmt {

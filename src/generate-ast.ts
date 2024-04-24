@@ -19,6 +19,7 @@ function main(args: string[]) {
     'Variable = name: Token'
   ], ['Token']);
   defineAst(outputDir, 'Stmt', [
+    "Class = name: Token, methods: Fun[]",
     "Block = statements: Stmt[]",
     'Expression = expression: Expr',
     'Fun = name: Token, params: Token[], body: Stmt[]',

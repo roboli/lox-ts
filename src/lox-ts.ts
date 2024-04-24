@@ -9,3 +9,4 @@ export * from './resolver';
 export * from './environment';
 export * from './lox-callable';
 export * from './lox-function';
+export * from './lox-class';
