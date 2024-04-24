@@ -25,9 +25,15 @@ import {
 
 type Scope = Map<String, Boolean>;
 
+enum FunctionType {
+  None,
+  Function
+}
+
 export class Resolver implements ExprVisitor<void>, StmtVisitor<void> {
   errors: ResolverError[] = [];
   scopes: Array<Scope> = [];
+  currentFunction: FunctionType = FunctionType.None;
   interpreter: Interpreter;
 
   constructor(interpreter: Interpreter) {
@@ -56,6 +62,23 @@ export class Resolver implements ExprVisitor<void>, StmtVisitor<void> {
     expr.accept(this);
   }
 
+  resolveFunction(stmt: Fun, type: FunctionType) {
+    let enclosingFunction = this.currentFunction;
+    this.currentFunction = type;
+
+    this.beginScope();
+    for (let param of stmt.params) {
+      this.declares(param);
+      this.defines(param);
+    }
+    for (let stm of stmt.body) {
+      this.resolveStmt(stm);
+    }
+    this.endScope();
+
+    this.currentFunction = enclosingFunction;
+  }
+
   visitBlockStmt(stmt: Block) {
     this.beginScope();
     for (let stm of stmt.statements) {
@@ -67,12 +90,7 @@ export class Resolver implements ExprVisitor<void>, StmtVisitor<void> {
   visitFunStmt(stmt: Fun) {
     this.declares(stmt.name);
     this.defines(stmt.name);
-
-    this.beginScope();
-    for (let stm of stmt.body) {
-      this.resolveStmt(stm);
-    }
-    this.endScope();
+    this.resolveFunction(stmt, FunctionType.Function);
   }
 
   visitVarStmt(stmt: Var) {
@@ -137,6 +155,10 @@ export class Resolver implements ExprVisitor<void>, StmtVisitor<void> {
   }
 
   visitReturnStmt(stmt: Return) {
+    if (this.currentFunction == FunctionType.None) {
+      throw new ResolverError('Cannot return from top-level code', stmt.keyword.line);
+    }
+
     if (stmt.value != null) {
       this.resolveExpr(stmt.value);
     }
