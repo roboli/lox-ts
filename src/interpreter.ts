@@ -144,7 +144,7 @@ export class Interpreter implements ExprVisitor<any>, StmtVisitor<void> {
   visitAssignExpr(expr: Assign): any {
     let value = this.evaluate(expr.value);
     let distance = this.locals.get(expr);
-    if (distance != null) {
+    if (distance != undefined) {
       this.environment.assignAt(distance, expr.name, value);
     } else {
       this.globals.assign(expr.name, value);
