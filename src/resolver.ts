@@ -76,28 +76,21 @@ export class Resolver implements ExprVisitor<void>, StmtVisitor<void> {
   }
 
   visitVarStmt(stmt: Var) {
-    if (this.scopes.length && this.scopes[this.scopes.length - 1].has(stmt.name.lexeme)) {
-      throw new ResolverError('Variable already exists in this scope', stmt.name.line);
-    }
-
     this.declares(stmt.name);
     if (stmt.initializer != null) {
       this.resolveExpr(stmt.initializer);
-      this.defines(stmt.name);
     }
+    this.defines(stmt.name);
   }
 
   visitVariableExpr(expr: Variable) {
+    if (this.scopes.length && this.scopes[this.scopes.length - 1].get(expr.name.lexeme) == false) {
+      throw new ResolverError('Cannot read local variable in its own initializer', expr.name.line);
+    }
     this.resolveLocal(expr, expr.name);
   }
 
   visitAssignExpr(expr: Assign) {
-    if (this.scopes.length
-      && this.scopes[this.scopes.length - 1].has(expr.name.lexeme)
-      && this.scopes[this.scopes.length - 1].get(expr.name.lexeme) == false) {
-      throw new ResolverError('Variable cannot be assign to itself.', expr.name.line);
-    }
-
     this.resolveExpr(expr.value);
     this.resolveLocal(expr, expr.name);
   }
@@ -169,6 +162,11 @@ export class Resolver implements ExprVisitor<void>, StmtVisitor<void> {
   declares(name: Token) {
     if (this.scopes.length == 0) return;
     let scope: Scope = this.scopes[this.scopes.length - 1];
+
+    if (scope.get(name.lexeme)) {
+      throw new ResolverError('Already a variable with this name in this scope', name.line);
+    }
+
     scope.set(name.lexeme, false);
   }
 
