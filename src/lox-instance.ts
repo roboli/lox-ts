@@ -1,3 +1,4 @@
+import { InterpreterError } from "./interpreter";
 import { LoxClass } from "./lox-class";
 import { Token } from "./token";
 
@@ -10,7 +11,16 @@ export class LoxInstance {
   }
 
   get(name: Token): any {
-    return this.vars.get(name.lexeme);
+    if (this.vars.has(name.lexeme)) {
+      return this.vars.get(name.lexeme);
+    }
+
+    let method = this.klass.findMethod(name);
+    if (method != undefined) {
+      return method;
+    }
+
+    throw new InterpreterError(`Undefined property ${name.lexeme}`, name.line);
   }
 
   set(name: Token, value: any) {

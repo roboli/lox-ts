@@ -53,9 +53,11 @@ export class Parser {
 
   declaration(): Stmt {
     if (this.match(TokenType.class)) {
+      this.advance();
       return this.classDeclaration();
     } else if (this.match(TokenType.fun)) {
-      return this.fun();
+      this.advance();
+      return this.funDeclaration();
     } else if (this.match(TokenType.var)) {
       return this.varDeclaration();
     } else {
@@ -64,7 +66,6 @@ export class Parser {
   }
 
   classDeclaration(): Stmt {
-    this.advance();
     this.ensure(TokenType.identifier, 'Expect class name.');
     let name = this.peekAndAdvance();
 
@@ -72,15 +73,14 @@ export class Parser {
     let methods: Fun[] = [];
 
     while (!this.match(TokenType.braceRight, TokenType.eof)) {
-      methods.push(this.fun() as Fun);
+      methods.push(this.funDeclaration() as Fun);
     }
 
     this.ensureAndAdvance(TokenType.braceRight, 'Expect closing "}".');
     return new Class(name, methods);
   }
 
-  fun(): Stmt {
-    this.advance();
+  funDeclaration(): Stmt {
     this.ensure(TokenType.identifier, 'Expect function name.');
     let name = this.peekAndAdvance();
 

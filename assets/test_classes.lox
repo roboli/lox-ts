@@ -1,4 +1,8 @@
-class Mine {}
+class Mine {
+  salute() {
+    print "Hi!";
+  }
+}
 print Mine;
 
 var mio = Mine();
@@ -6,3 +10,5 @@ print mio;
 
 mio.name = "Robert";
 print mio.name;
+
+mio.salute();

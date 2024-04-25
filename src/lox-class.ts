@@ -2,7 +2,8 @@ import {
   LoxCallable,
   LoxFunction,
   LoxInstance,
-  Interpreter
+  Interpreter,
+  Token
 } from "./lox-ts";
 
 export class LoxClass implements LoxCallable {
@@ -12,6 +13,14 @@ export class LoxClass implements LoxCallable {
   constructor(name: string, methods: LoxFunction[]) {
     this.name = name;
     this.methods = methods;
+  }
+
+  findMethod(name: Token): LoxFunction | undefined {
+    for (let method of this.methods) {
+      if (method.declaration.name.lexeme == name.lexeme) {
+        return method;
+      }
+    }
   }
 
   arity() {

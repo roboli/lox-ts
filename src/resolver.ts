@@ -93,6 +93,9 @@ export class Resolver implements ExprVisitor<void>, StmtVisitor<void> {
   visitClassStmt(stmt: Class) {
     this.declares(stmt.name);
     this.defines(stmt.name);
+    for (let method of stmt.methods) {
+      this.resolveStmt(method);
+    }
   }
 
   visitFunStmt(stmt: Fun) {
