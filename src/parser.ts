@@ -19,7 +19,8 @@ import {
   Call,
   Fun,
   Return,
-  Class
+  Class,
+  Get
 } from "./lox-ts";
 
 export class Parser {
@@ -352,8 +353,16 @@ export class Parser {
   call(): Expr {
     let expr = this.primary();
 
-    while (this.match(TokenType.parenLeft)) {
-      expr = this.finishCall(expr);
+    while (true) {
+      if (this.match(TokenType.parenLeft)) {
+        expr = this.finishCall(expr);
+      } else if (this.match(TokenType.dot)) {
+        this.advance();
+        this.ensure(TokenType.identifier, 'Expect name after dot.');
+        expr = new Get(expr, this.peekAndAdvance());
+      } else {
+        break;
+      }
     }
 
     return expr;

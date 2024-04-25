@@ -3,3 +3,6 @@ print Mine;
 
 var mio = Mine();
 print mio;
+
+mio.name = "Robert";
+print mio.name;

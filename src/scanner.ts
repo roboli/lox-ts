@@ -105,6 +105,15 @@ export class Scanner {
           }));
           break;
 
+        case '.':
+          this.advance();
+          this.tokens.push(new Token({
+            type: TokenType.dot,
+            lexeme: '.',
+            line: this.line
+          }));
+          break;
+
         case '+':
           this.advance();
           this.tokens.push(new Token({

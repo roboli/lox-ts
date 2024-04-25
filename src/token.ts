@@ -6,6 +6,7 @@ export enum TokenType {
   braceRight,
   class,
   comma,
+  dot,
   else,
   equal,
   equalEqual,

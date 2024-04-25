@@ -8,6 +8,7 @@ import {
   ExprVisitor,
   Expression,
   Fun,
+  Get,
   Grouping,
   If,
   Interpreter,
@@ -129,6 +130,10 @@ export class Resolver implements ExprVisitor<void>, StmtVisitor<void> {
     for (let arg of expr.args) {
       this.resolveExpr(arg);
     }
+  }
+
+  visitGetExpr(expr: Get) {
+    this.resolveExpr(expr.obj);
   }
 
   visitExpressionStmt(stmt: Expression) {

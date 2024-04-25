@@ -25,7 +25,9 @@ import {
   LoxFunction,
   Return,
   Class,
-  LoxClass
+  LoxClass,
+  Get,
+  LoxInstance
 } from "./lox-ts";
 
 class Clock implements LoxCallable {
@@ -229,6 +231,14 @@ export class Interpreter implements ExprVisitor<any>, StmtVisitor<void> {
     }
 
     return fun.call(this, expr.args.map(arg => this.evaluate(arg)));
+  }
+
+  visitGetExpr(expr: Get) {
+    let obj = this.evaluate(expr.obj);
+    if (!(obj instanceof LoxInstance)) {
+      throw new InterpreterError('Can only call properties on instances', expr.name.line);
+    }
+    return obj.get(expr.name);
   }
 
   visitGroupingExpr(expr: Grouping): any {
