@@ -27,7 +27,8 @@ import {
   Class,
   LoxClass,
   Get,
-  LoxInstance
+  LoxInstance,
+  Set
 } from "./lox-ts";
 
 class Clock implements LoxCallable {
@@ -239,6 +240,15 @@ export class Interpreter implements ExprVisitor<any>, StmtVisitor<void> {
       throw new InterpreterError('Can only call properties on instances', expr.name.line);
     }
     return obj.get(expr.name);
+  }
+
+  visitSetExpr(expr: Set) {
+    let obj = this.evaluate(expr.obj);
+    if (!(obj instanceof LoxInstance)) {
+      throw new InterpreterError('Can only set properties on instances', expr.name.line);
+    }
+    let value = this.evaluate(expr.value);
+    obj.set(expr.name, value);
   }
 
   visitGroupingExpr(expr: Grouping): any {

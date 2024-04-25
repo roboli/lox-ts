@@ -20,7 +20,8 @@ import {
   Fun,
   Return,
   Class,
-  Get
+  Get,
+  Set
 } from "./lox-ts";
 
 export class Parser {
@@ -255,6 +256,8 @@ export class Parser {
 
       if (expr instanceof Variable) {
         expr = new Assign((expr as Variable).name, this.assignment());
+      } else if (expr instanceof Get) {
+        expr = new Set(expr.obj, expr.name, this.assignment());
       } else {
         throw new ParseError('Invalid assignment target', equals.line);
       }

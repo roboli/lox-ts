@@ -12,6 +12,7 @@ export interface ExprVisitor<T> {
   visitGroupingExpr(expr: Grouping): T;
   visitLiteralExpr(expr: Literal): T;
   visitLogicalExpr(expr: Logical): T;
+  visitSetExpr(expr: Set): T;
   visitUnaryExpr(expr: Unary): T;
   visitVariableExpr(expr: Variable): T;
 }
@@ -106,6 +107,21 @@ export class Logical implements Expr {
 
   accept<T>(visitor: ExprVisitor<T>): T {
     return visitor.visitLogicalExpr(this);
+  }
+}
+
+export class Set implements Expr {
+  obj: Expr;
+  name: Token;
+  value: Expr;
+  constructor(obj: Expr,name: Token,value: Expr) {
+    this.obj = obj
+    this.name = name
+    this.value = value
+  }
+
+  accept<T>(visitor: ExprVisitor<T>): T {
+    return visitor.visitSetExpr(this);
   }
 }
 

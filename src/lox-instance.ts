@@ -13,6 +13,10 @@ export class LoxInstance {
     return this.vars.get(name.lexeme);
   }
 
+  set(name: Token, value: any) {
+    this.vars.set(name.lexeme, value);
+  }
+
   toString() {
     return `<instance ${this.klass.name}>`;
   }

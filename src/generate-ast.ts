@@ -16,6 +16,7 @@ function main(args: string[]) {
     'Grouping = expression: Expr',
     'Literal = value: any ',
     'Logical = left: Expr, operator: Token, right: Expr',
+    'Set = obj: Expr, name: Token, value: Expr',
     'Unary = operator: Token, right: Expr',
     'Variable = name: Token'
   ], ['Token']);

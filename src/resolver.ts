@@ -16,6 +16,7 @@ import {
   Logical,
   Print,
   Return,
+  Set,
   Stmt,
   StmtVisitor,
   Token,
@@ -134,6 +135,11 @@ export class Resolver implements ExprVisitor<void>, StmtVisitor<void> {
 
   visitGetExpr(expr: Get) {
     this.resolveExpr(expr.obj);
+  }
+
+  visitSetExpr(expr: Set) {
+    this.resolveExpr(expr.obj);
+    this.resolveExpr(expr.value);
   }
 
   visitExpressionStmt(stmt: Expression) {
