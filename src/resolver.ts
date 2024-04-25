@@ -30,7 +30,8 @@ type Scope = Map<String, Boolean>;
 
 enum FunctionType {
   None,
-  Function
+  Function,
+  Method
 }
 
 export class Resolver implements ExprVisitor<void>, StmtVisitor<void> {
@@ -94,7 +95,7 @@ export class Resolver implements ExprVisitor<void>, StmtVisitor<void> {
     this.declares(stmt.name);
     this.defines(stmt.name);
     for (let method of stmt.methods) {
-      this.resolveStmt(method);
+      this.resolveFunction(method, FunctionType.Method);
     }
   }
 
