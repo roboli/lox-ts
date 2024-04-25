@@ -10,3 +10,4 @@ export * from './environment';
 export * from './lox-callable';
 export * from './lox-function';
 export * from './lox-class';
+export * from './lox-instance';

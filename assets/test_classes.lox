@@ -1,3 +1,5 @@
 class Mine {}
-
 print Mine;
+
+var mio = Mine();
+print mio;
