@@ -8,19 +8,15 @@ import {
 
 export class LoxClass implements LoxCallable {
   name: string;
-  methods: LoxFunction[];
+  methods: Map<String, LoxFunction>;
 
-  constructor(name: string, methods: LoxFunction[]) {
+  constructor(name: string, methods: Map<String, LoxFunction>) {
     this.name = name;
     this.methods = methods;
   }
 
-  findMethod(name: Token): LoxFunction | undefined {
-    for (let method of this.methods) {
-      if (method.declaration.name.lexeme == name.lexeme) {
-        return method;
-      }
-    }
+  findMethod(name: string): LoxFunction | undefined {
+    return this.methods.get(name);
   }
 
   arity() {

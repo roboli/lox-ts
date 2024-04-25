@@ -15,7 +15,7 @@ export class LoxInstance {
       return this.vars.get(name.lexeme);
     }
 
-    let method = this.klass.findMethod(name);
+    let method = this.klass.findMethod(name.lexeme);
     if (method != undefined) {
       return method;
     }
