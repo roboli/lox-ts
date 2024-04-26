@@ -193,7 +193,7 @@ export class Resolver implements ExprVisitor<void>, StmtVisitor<void> {
   }
 
   visitThisExpr(expr: This) {
-    this.resolveLocal(expr, expr.name);
+    this.resolveLocal(expr, expr.keyword);
   }
 
   visitUnaryExpr(expr: Unary) {

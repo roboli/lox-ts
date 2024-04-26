@@ -257,7 +257,7 @@ export class Interpreter implements ExprVisitor<any>, StmtVisitor<void> {
   }
 
   visitThisExpr(expr: This) {
-    return this.lookUpVariable(expr, expr.name);
+    return this.lookUpVariable(expr, expr.keyword);
   }
 
   visitUnaryExpr(expr: Unary): any {

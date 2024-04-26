@@ -127,9 +127,9 @@ export class Set implements Expr {
 }
 
 export class This implements Expr {
-  name: Token;
-  constructor(name: Token) {
-    this.name = name
+  keyword: Token;
+  constructor(keyword: Token) {
+    this.keyword = keyword
   }
 
   accept<T>(visitor: ExprVisitor<T>): T {
