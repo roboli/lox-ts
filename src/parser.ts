@@ -21,7 +21,8 @@ import {
   Return,
   Class,
   Get,
-  Set
+  Set,
+  This
 } from "./lox-ts";
 
 export class Parser {
@@ -415,6 +416,9 @@ export class Parser {
 
       case TokenType.identifier:
         return new Variable(this.peekAndAdvance());
+
+      case TokenType.this:
+        return new This(this.peekAndAdvance());
 
       default:
         throw new ParseError(`Unexpected "${this.peek().lexeme}" found.`, this.peek().line);

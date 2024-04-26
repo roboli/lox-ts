@@ -28,7 +28,8 @@ import {
   LoxClass,
   Get,
   LoxInstance,
-  Set
+  Set,
+  This
 } from "./lox-ts";
 
 class Clock implements LoxCallable {
@@ -253,6 +254,10 @@ export class Interpreter implements ExprVisitor<any>, StmtVisitor<void> {
 
   visitGroupingExpr(expr: Grouping): any {
     return this.evaluate(expr.expression);
+  }
+
+  visitThisExpr(expr: This) {
+    return this.lookUpVariable(expr, expr.name);
   }
 
   visitUnaryExpr(expr: Unary): any {

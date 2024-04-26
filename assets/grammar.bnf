@@ -41,6 +41,7 @@ primary     -> NUMBER
 	     | "true"
 	     | "false"
 	     | "nil"
+	     | "this"
 	     | "(" expression ")"
 	     | IDENTIFIER ;
 

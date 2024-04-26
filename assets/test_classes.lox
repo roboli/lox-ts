@@ -1,6 +1,6 @@
 class Mine {
   salute() {
-    print "Hi!";
+    print "Hi! " + this.name;
   }
 }
 print Mine;

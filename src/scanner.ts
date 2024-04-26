@@ -27,6 +27,7 @@ export class Scanner {
     'or': TokenType.or,
     'print': TokenType.print,
     'return': TokenType.return,
+    'this': TokenType.this,
     'true': TokenType.true,
     'var': TokenType.var,
     'while': TokenType.while

@@ -1,4 +1,11 @@
-import { Interpreter, LoxCallable, Fun, Environment, Return, ReturnException } from "./lox-ts";
+import {
+  Interpreter,
+  LoxCallable,
+  Fun,
+  Environment,
+  ReturnException,
+  LoxInstance
+} from "./lox-ts";
 
 export class LoxFunction implements LoxCallable {
   declaration: Fun;
@@ -7,6 +14,12 @@ export class LoxFunction implements LoxCallable {
   constructor(declaration: Fun, closure: Environment) {
     this.declaration = declaration;
     this.closure = closure;
+  }
+
+  bind(instance: LoxInstance) {
+    let environment = new Environment(this.closure);
+    environment.define('this', instance);
+    return new LoxFunction(this.declaration, environment);
   }
 
   arity() {

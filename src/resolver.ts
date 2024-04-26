@@ -19,6 +19,7 @@ import {
   Set,
   Stmt,
   StmtVisitor,
+  This,
   Token,
   Unary,
   Var,
@@ -94,9 +95,15 @@ export class Resolver implements ExprVisitor<void>, StmtVisitor<void> {
   visitClassStmt(stmt: Class) {
     this.declares(stmt.name);
     this.defines(stmt.name);
+
+    this.beginScope();
+    this.scopes[this.scopes.length - 1].set('this', true);
+
     for (let method of stmt.methods) {
       this.resolveFunction(method, FunctionType.Method);
     }
+
+    this.endScope();
   }
 
   visitFunStmt(stmt: Fun) {
@@ -183,6 +190,10 @@ export class Resolver implements ExprVisitor<void>, StmtVisitor<void> {
     if (stmt.value != null) {
       this.resolveExpr(stmt.value);
     }
+  }
+
+  visitThisExpr(expr: This) {
+    this.resolveLocal(expr, expr.name);
   }
 
   visitUnaryExpr(expr: Unary) {
