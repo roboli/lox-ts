@@ -143,7 +143,6 @@ export class Interpreter implements ExprVisitor<any>, StmtVisitor<void> {
   }
 
   visitClassStmt(stmt: Class) {
-    this.environment.define(stmt.name.lexeme, null);
     let superclass;
 
     if (stmt.superclass) {
@@ -152,6 +151,8 @@ export class Interpreter implements ExprVisitor<any>, StmtVisitor<void> {
         throw new InterpreterError('Superclass must be a class', stmt.superclass.name.line);
       }
     }
+
+    this.environment.define(stmt.name.lexeme, null);
 
     let methods = new Map<String, LoxFunction>();
     for (let method of stmt.methods) {
