@@ -32,6 +32,7 @@ type Scope = Map<String, Boolean>;
 enum FunctionType {
   None,
   Function,
+  Initializer,
   Method
 }
 
@@ -109,7 +110,11 @@ export class Resolver implements ExprVisitor<void>, StmtVisitor<void> {
     this.scopes[this.scopes.length - 1].set('this', true);
 
     for (let method of stmt.methods) {
-      this.resolveFunction(method, FunctionType.Method);
+      let declaration = FunctionType.Method;
+      if (method.name.lexeme == 'init') {
+        this.currentFunction = FunctionType.Initializer;
+      }
+      this.resolveFunction(method, declaration);
     }
 
     this.endScope();
@@ -195,6 +200,12 @@ export class Resolver implements ExprVisitor<void>, StmtVisitor<void> {
   visitReturnStmt(stmt: Return) {
     if (this.currentFunction == FunctionType.None) {
       throw new ResolverError('Cannot return from top-level code', stmt.keyword.line);
+    }
+
+    if (stmt.value != null) {
+      if (this.currentFunction == FunctionType.Initializer) {
+        throw new ResolverError('Cannot return value from initializer', stmt.keyword.line);
+      }
     }
 
     if (stmt.value != null) {

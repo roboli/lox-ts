@@ -318,7 +318,7 @@ export class Interpreter implements ExprVisitor<any>, StmtVisitor<void> {
   lookUpVariable(expr: Expr, name: Token) {
     let distance = this.locals.get(expr);
     if (distance != undefined) {
-      return this.environment.getAt(distance, name);
+      return this.environment.getAt(distance, name.lexeme);
     } else {
       return this.globals.get(name);
     }

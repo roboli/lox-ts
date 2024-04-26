@@ -10,10 +10,12 @@ import {
 export class LoxFunction implements LoxCallable {
   declaration: Fun;
   closure: Environment;
+  isInitializer: boolean;
 
-  constructor(declaration: Fun, closure: Environment) {
+  constructor(declaration: Fun, closure: Environment, isInitializer: boolean = false) {
     this.declaration = declaration;
     this.closure = closure;
+    this.isInitializer = isInitializer;
   }
 
   bind(instance: LoxInstance) {
@@ -37,10 +39,17 @@ export class LoxFunction implements LoxCallable {
       interpreter.executeBlock(this.declaration.body, environment);
     } catch (e) {
       if (e instanceof ReturnException) {
+        if (this.isInitializer) {
+          return this.closure.getAt(0, 'this');
+        }
         return e.value;
       } else {
         throw e;
       }
+    }
+
+    if (this.isInitializer) {
+      return this.closure.getAt(0, 'this');
     }
   }
 }

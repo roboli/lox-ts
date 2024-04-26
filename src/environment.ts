@@ -30,8 +30,8 @@ export class Environment {
     }
   }
 
-  getAt(distance: number, name: Token): any {
-    return this.ancestor(distance)?.get(name);
+  getAt(distance: number, name: string): any {
+    return this.ancestor(distance)?.vars.get(name);
   }
 
   assign(name: Token, value: any) {
