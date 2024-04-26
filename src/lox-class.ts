@@ -8,15 +8,24 @@ import {
 
 export class LoxClass implements LoxCallable {
   name: string;
+  superclass: LoxClass | null;
   methods: Map<String, LoxFunction>;
 
-  constructor(name: string, methods: Map<String, LoxFunction>) {
+  constructor(name: string, superclass: LoxClass | null, methods: Map<String, LoxFunction>) {
     this.name = name;
+    this.superclass = superclass;
     this.methods = methods;
   }
 
   findMethod(name: string): LoxFunction | undefined {
-    return this.methods.get(name);
+    let method = this.methods.get(name);
+    if (method != undefined) {
+      return method;
+    }
+
+    if (this.superclass) {
+      return this.superclass.findMethod(name);
+    }
   }
 
   arity() {

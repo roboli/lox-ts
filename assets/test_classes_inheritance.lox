@@ -1,0 +1,15 @@
+class Person {
+  salute() {
+    print "Hello: person";
+  }
+}
+
+class Athlete < Person {
+  run() {
+    print "I'm running!";
+  }
+}
+
+var mike = Athlete();
+mike.salute();
+mike.run();

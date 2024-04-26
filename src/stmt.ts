@@ -1,4 +1,4 @@
-import { Token,Expr } from './lox-ts'
+import { Token,Expr,Variable } from './lox-ts'
 
 export interface Stmt {
   accept<T>(visitor: StmtVisitor<T>): T;
@@ -29,9 +29,11 @@ export class Block implements Stmt {
 
 export class Class implements Stmt {
   name: Token;
+  superclass: Variable | null;
   methods: Fun[];
-  constructor(name: Token,methods: Fun[]) {
+  constructor(name: Token,superclass: Variable | null,methods: Fun[]) {
     this.name = name
+    this.superclass = superclass
     this.methods = methods
   }
 

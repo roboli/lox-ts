@@ -69,6 +69,13 @@ export class Parser {
   classDeclaration(): Stmt {
     this.ensure(TokenType.identifier, 'Expect class name.');
     let name = this.peekAndAdvance();
+    let superclass = null;
+
+    if (this.match(TokenType.less)) {
+      this.advance();
+      this.ensure(TokenType.identifier, 'Expect superclass name.');
+      superclass = new Variable(this.peekAndAdvance());
+    }
 
     this.ensureAndAdvance(TokenType.braceLeft, 'Expect "{" after class name.');
     let methods: Fun[] = [];
@@ -78,7 +85,7 @@ export class Parser {
     }
 
     this.ensureAndAdvance(TokenType.braceRight, 'Expect closing "}".');
-    return new Class(name, methods);
+    return new Class(name, superclass, methods);
   }
 
   funDeclaration(): Stmt {

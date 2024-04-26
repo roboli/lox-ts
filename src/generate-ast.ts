@@ -23,7 +23,7 @@ function main(args: string[]) {
   ], ['Token']);
   defineAst(outputDir, 'Stmt', [
     "Block = statements: Stmt[]",
-    "Class = name: Token, methods: Fun[]",
+    "Class = name: Token, superclass: Variable | null, methods: Fun[]",
     'Expression = expression: Expr',
     'Fun = name: Token, params: Token[], body: Stmt[]',
     'If = condition: Expr, thenBranch: Stmt, elseBranch: Stmt | null',
@@ -31,7 +31,7 @@ function main(args: string[]) {
     'Return = keyword: Token, value: Expr | null',
     'Var = name: Token, initializer: Expr | null',
     'While = condition: Expr, body: Stmt'
-  ], ['Token', 'Expr']);
+  ], ['Token', 'Expr', 'Variable']);
 }
 
 function defineAst(outputDir: string, baseName: string, types: string[], imports: string[]) {
