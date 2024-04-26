@@ -20,11 +20,21 @@ export class LoxClass implements LoxCallable {
   }
 
   arity() {
-    return 0;
+    let init = this.findMethod('init');
+    if (init) {
+      return init.arity();
+    } else {
+      return 0;
+    }
   }
 
   call(interpreter: Interpreter, args: any[]): any {
-    return new LoxInstance(this);
+    let instance = new LoxInstance(this);
+    let init = this.findMethod('init');
+    if (init) {
+      init.bind(instance).call(interpreter, args);
+    }
+    return instance;
   }
 
   toString() {

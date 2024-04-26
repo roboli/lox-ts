@@ -1,11 +1,16 @@
 class Mine {
+  init(last) {
+    this.last = last;
+  }
+
   salute() {
-    print "Hi! " + this.name;
+    print "Hi! " + this.name + " " + this.last;
   }
 }
+
 print Mine;
 
-var mio = Mine();
+var mio = Mine("Oliver");
 print mio;
 
 mio.name = "Robert";
