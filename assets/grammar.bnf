@@ -43,7 +43,8 @@ primary     -> NUMBER
 	     | "nil"
 	     | "this"
 	     | "(" expression ")"
-	     | IDENTIFIER ;
+	     | IDENTIFIER
+	     | "super" "." IDENTIFIER ;
 
 arguments   -> expression ( "," expression )* ;
 parameters  -> IDENTIFIER ( "," IDENTIFIER )* ;

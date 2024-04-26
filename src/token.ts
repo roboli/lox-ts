@@ -33,6 +33,7 @@ export enum TokenType {
   slash,
   star,
   string,
+  super,
   this,
   true,
   var,

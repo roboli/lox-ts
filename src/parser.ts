@@ -22,7 +22,8 @@ import {
   Class,
   Get,
   Set,
-  This
+  This,
+  Super
 } from "./lox-ts";
 
 export class Parser {
@@ -426,6 +427,11 @@ export class Parser {
 
       case TokenType.this:
         return new This(this.peekAndAdvance());
+
+      case TokenType.super:
+        let obj = new Variable(this.peekAndAdvance());
+        this.ensureAndAdvance(TokenType.dot, 'Expect "." after "super".');
+        return new Super(obj, this.peekAndAdvance());
 
       default:
         throw new ParseError(`Unexpected "${this.peek().lexeme}" found.`, this.peek().line);

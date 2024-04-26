@@ -19,6 +19,7 @@ import {
   Set,
   Stmt,
   StmtVisitor,
+  Super,
   This,
   Token,
   Unary,
@@ -114,6 +115,11 @@ export class Resolver implements ExprVisitor<void>, StmtVisitor<void> {
       this.resolveLocal(stmt.superclass, stmt.superclass.name);
     }
 
+    if (stmt.superclass) {
+      this.beginScope();
+      this.scopes[this.scopes.length - 1].set('super', true);
+    }
+
     this.beginScope();
     this.scopes[this.scopes.length - 1].set('this', true);
 
@@ -123,6 +129,10 @@ export class Resolver implements ExprVisitor<void>, StmtVisitor<void> {
         this.currentFunction = FunctionType.Initializer;
       }
       this.resolveFunction(method, declaration);
+    }
+
+    if (stmt.superclass) {
+      this.endScope();
     }
 
     this.endScope();
@@ -219,6 +229,10 @@ export class Resolver implements ExprVisitor<void>, StmtVisitor<void> {
     if (stmt.value != null) {
       this.resolveExpr(stmt.value);
     }
+  }
+
+  visitSuperExpr(expr: Super) {
+    this.resolveExpr(expr.obj);
   }
 
   visitThisExpr(expr: This) {

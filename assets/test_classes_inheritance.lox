@@ -1,15 +1,29 @@
 class Person {
+  init(name) {
+    this.name = name;
+  }
+
   salute() {
-    print "Hello: person";
+    print "Hello: " + this.name;
   }
 }
 
 class Athlete < Person {
+  init(name, level) {
+    super.init(name);
+    this.level = level;
+  }
+
+  salute() {
+    super.salute();
+    print "Level: " + this.level;
+  }
+
   run() {
     print "I'm running!";
   }
 }
 
-var mike = Athlete();
+var mike = Athlete("Mike", "9");
 mike.salute();
 mike.run();

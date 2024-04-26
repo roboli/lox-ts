@@ -29,7 +29,8 @@ import {
   Get,
   LoxInstance,
   Set,
-  This
+  This,
+  Super
 } from "./lox-ts";
 
 class Clock implements LoxCallable {
@@ -154,9 +155,18 @@ export class Interpreter implements ExprVisitor<any>, StmtVisitor<void> {
 
     this.environment.define(stmt.name.lexeme, null);
 
+    if (stmt.superclass) {
+      this.environment = new Environment(this.environment);
+      this.environment.define('super', superclass);
+    }
+
     let methods = new Map<String, LoxFunction>();
     for (let method of stmt.methods) {
       methods.set(method.name.lexeme, new LoxFunction(method, this.environment));
+    }
+
+    if (stmt.superclass) {
+      this.environment = this.environment.enclosing!;
     }
 
     this.environment.assign(stmt.name, new LoxClass(stmt.name.lexeme, superclass ? superclass as LoxClass : null, methods));
@@ -263,6 +273,16 @@ export class Interpreter implements ExprVisitor<any>, StmtVisitor<void> {
 
   visitGroupingExpr(expr: Grouping): any {
     return this.evaluate(expr.expression);
+  }
+
+  visitSuperExpr(expr: Super) {
+    let distance = this.locals.get(expr.obj);
+    let superclass = this.environment.getAt(distance!, 'super');
+    let instance = this.environment.getAt(distance! - 1, 'this');
+    if (!(superclass instanceof LoxClass)) {
+      throw new InterpreterError('Can only call "super" on a class.', expr.name.line);
+    }
+    return superclass.findMethod(expr.name.lexeme)?.bind(instance);
   }
 
   visitThisExpr(expr: This) {
