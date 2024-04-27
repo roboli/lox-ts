@@ -429,9 +429,10 @@ export class Parser {
         return new This(this.peekAndAdvance());
 
       case TokenType.super:
-        let obj = new Variable(this.peekAndAdvance());
+        let kw = this.peekAndAdvance();
         this.ensureAndAdvance(TokenType.dot, 'Expect "." after "super".');
-        return new Super(obj, this.peekAndAdvance());
+        this.ensure(TokenType.identifier, 'Expect method name after ".".');
+        return new Super(kw, this.peekAndAdvance());
 
       default:
         throw new ParseError(`Unexpected "${this.peek().lexeme}" found.`, this.peek().line);

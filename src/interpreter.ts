@@ -276,13 +276,16 @@ export class Interpreter implements ExprVisitor<any>, StmtVisitor<void> {
   }
 
   visitSuperExpr(expr: Super) {
-    let distance = this.locals.get(expr.obj);
+    let distance = this.locals.get(expr);
     let superclass = this.environment.getAt(distance!, 'super');
     let instance = this.environment.getAt(distance! - 1, 'this');
-    if (!(superclass instanceof LoxClass)) {
-      throw new InterpreterError('Can only call "super" on a class.', expr.name.line);
+
+    let method = superclass.findMethod(expr.name.lexeme);
+    if (method && (method instanceof LoxFunction)) {
+      return method.bind(instance);
     }
-    return superclass.findMethod(expr.name.lexeme)?.bind(instance);
+
+    throw new InterpreterError(`Undefined propert ${expr.name.lexeme}`, expr.name.line);
   }
 
   visitThisExpr(expr: This) {

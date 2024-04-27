@@ -17,7 +17,7 @@ function main(args: string[]) {
     'Literal = value: any ',
     'Logical = left: Expr, operator: Token, right: Expr',
     'Set = obj: Expr, name: Token, value: Expr',
-    'Super = obj: Variable, name: Token',
+    'Super = keyword: Token, name: Token',
     'This = keyword: Token',
     'Unary = operator: Token, right: Expr',
     'Variable = name: Token'

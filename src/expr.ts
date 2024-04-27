@@ -128,10 +128,10 @@ export class Set implements Expr {
 }
 
 export class Super implements Expr {
-  obj: Variable;
+  keyword: Token;
   name: Token;
-  constructor(obj: Variable,name: Token) {
-    this.obj = obj
+  constructor(keyword: Token,name: Token) {
+    this.keyword = keyword
     this.name = name
   }
 
